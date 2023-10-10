@@ -1,0 +1,118 @@
+const bannerModel = require("../model/banner.model");
+
+//! ============================================== List Banners ==============================================
+
+const listBanner = async (req, res, next) => {
+  try {
+    const banners = await bannerModel.find({});
+    res.status(200).json({
+      message: "Banners Fetched",
+      success: true,
+      data: banners,
+    });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, message: "Error Occurred" });
+  }
+};
+
+//! =============================================== Add Banner ===============================================
+
+const insertBanner = async (req, res, next) => {
+  try {
+    const { title, description, link, image } = req.body;
+    const bannerExists = await bannerModel.findOne({ title: req.body.title });
+    if (bannerExists) {
+      return res
+        .status(200)
+        .json({ message: "Already Exists", success: false });
+    }
+    const newBanner = new bannerModel({
+      title,
+      description,
+      link,
+      image,
+    });
+    const savedBanner = await newBanner.save();
+    res.status(200).json({
+      message: "Banner Created",
+      success: true,
+      savedBanner,
+    });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, message: "Error Occurred" });
+  }
+};
+
+//! ============================================== Edit Banner ==============================================
+
+const editBanner = async (req, res, next) => {
+  try {
+    const { image, title, description, link } = req.body;
+    const bannerId = req.params.bannerId;
+    const banner = await bannerModel.findById(bannerId);
+    if (!banner) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Banner not found" });
+    }
+    banner.image = image;
+    banner.title = title;
+    banner.description = description;
+    banner.link = link;
+    const savedBanner = await banner.save();
+    res
+      .status(200)
+      .json({ success: true, message: "Banner Updated", savedBanner });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, message: "Error Occurred" });
+  }
+};
+
+//! ============================================== Banner Status ==============================================
+
+const bannerStatus = async (req, res, next) => {
+  try {
+    const bannerId = req.params.bannerId;
+    const banner = await bannerModel.findById(bannerId);
+    if (!banner) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Banner not Found" });
+    }
+    banner.status = !banner.status;
+    await banner.save();
+    res.status(200).json({ success: true, message: "Status Updated" });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, message: "Error Occurred" });
+  }
+};
+
+//! ============================================== Delete Banner ==============================================
+
+const deleteBanner = async (req, res, next) => {
+  try {
+    const bannerId = req.params.bannerId;
+    const banner = await bannerModel.findOneAndDelete({ _id: bannerId });
+    if (!banner) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Banner not found" });
+    }
+    res.status(200).json({ success: true, message: "Banner Deleted" });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, message: "Error Occurred" });
+  }
+};
+
+module.exports = {
+  listBanner,
+  insertBanner,
+  editBanner,
+  bannerStatus,
+  deleteBanner,
+};
