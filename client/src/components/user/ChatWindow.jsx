@@ -275,6 +275,7 @@ function ChatWindow({
           />
         ) : (
           <ScrollableFeed>
+            {messages.length < 10 && <div className="h-screen"></div>}
             {messages &&
               messages.map((m, i) => (
                 <div className="flex" key={m._id}>
