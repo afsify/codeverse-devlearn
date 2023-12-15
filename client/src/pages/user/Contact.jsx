@@ -159,8 +159,10 @@ function Contact() {
                 <span className="font-semibold">Access to premium</span>
               </div>
               <div className="flex items-center bg-gray-100 hover:bg-gray-200 p-3 rounded-md transition duration-300">
-                <PhoneFilled 
-                  style={{ color: "#005aab" }} className="mr-2 font-semibold" />
+                <PhoneFilled
+                  style={{ color: "#005aab" }}
+                  className="mr-2 font-semibold"
+                />
                 <span className="font-semibold">Personal tech support</span>
               </div>
               <div className="flex items-center bg-gray-100 hover:bg-gray-200 p-3 rounded-md transition duration-300">
@@ -186,7 +188,7 @@ function Contact() {
               </div>
             </motion.div>
             <motion.div variants={fadeInUp} className="flex justify-around">
-              {userData.prime ? (
+              {userData?.prime ? (
                 <div className="text-center mt-6">
                   <Button size="large" disabled>
                     Subscribed
@@ -206,7 +208,7 @@ function Contact() {
                   </StripeCheckout>
                 </div>
               )}
-              {userData.prime ? null : (
+              {userData?.prime ? null : (
                 <div className="text-center mt-6">
                   <StripeCheckout
                     token={(token) => handlePaymentSuccess(token, "yearly")}
