@@ -3,12 +3,12 @@ import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { Button, Form, Input } from "antd";
 import { GoogleLogin } from "@react-oauth/google";
-import { userPath } from "../../routes/routeConfig";
 import { userActions } from "../../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../../components/auth/AuthCard";
 import { getUser } from "../../api/services/userService";
 import { userLogin } from "../../api/services/userService";
+import { adminPath, userPath } from "../../routes/routeConfig";
 import { showLoading, hideLoading } from "../../utils/alertSlice";
 
 function Login() {
@@ -100,7 +100,9 @@ function Login() {
 
   return (
     <AuthCard>
-      <h2 className="font-bold text-3xl text-dark-purple">Login</h2>
+      <Link to={adminPath.signin}>
+        <h2 className="font-bold text-3xl text-dark-purple">Login</h2>
+      </Link>
       <p className="text-sm mt-3 text-dark-purple">
         If you are already a member, easily log in
       </p>
