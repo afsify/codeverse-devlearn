@@ -11,7 +11,9 @@ import Profile from "../pages/user/Profile";
 import Register from "../pages/user/Register";
 import Messages from "../pages/user/Messages";
 import ResetOTP from "../pages/user/ResetOTP";
+import NotFound from "../pages/error/NotFound";
 import RegisterOTP from "../pages/user/RegisterOTP";
+import ServerError from "../pages/error/ServerError";
 import CourseDetail from "../pages/user/CourseDetail";
 import ResetPassword from "../pages/user/ResetPassword";
 import ForgotPassword from "../pages/user/ForgotPassword";
@@ -29,6 +31,8 @@ function UserRoute() {
         <Route path={userPath.resetPassword} element={<ResetPassword />} />
         <Route path={userPath.forgotPassword} element={<ForgotPassword />} />
       </Route>
+      <Route path="/*" element={<NotFound />} />
+      <Route path="error" element={<ServerError />} />
       <Route path={userPath.home} element={<Home />} />
       <Route path={userPath.about} element={<About />} />
       <Route path={userPath.course} element={<Course />} />

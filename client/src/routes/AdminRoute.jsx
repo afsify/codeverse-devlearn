@@ -4,8 +4,10 @@ import Signin from "../pages/admin/Signin";
 import Meeting from "../pages/admin/Meeting";
 import Feedback from "../pages/admin/Feedback";
 import Settings from "../pages/admin/Settings";
+import NotFound from "../pages/error/NotFound";
 import Dashboard from "../pages/admin/Dashboard";
 import UserManage from "../pages/admin/UserManage";
+import ServerError from "../pages/error/ServerError";
 import CourseManage from "../pages/admin/CourseManage";
 import BannerManage from "../pages/admin/BannerManage";
 import ServiceManage from "../pages/admin/ServiceManage";
@@ -20,6 +22,8 @@ function AdminRoute() {
       <Route path={adminPath.signin} element={<Signin />} />
     </Route>
     <Route element={<PrivateRoute role={"admin"} route={`/admin/${adminPath.signin}`} />}>
+      <Route path="/*" element={<NotFound />} />
+      <Route path="error" element={<ServerError />} />
       <Route path={adminPath.meeting} element={<Meeting />} />
       <Route path={adminPath.feedback} element={<Feedback />} />
       <Route path={adminPath.settings} element={<Settings />} />
