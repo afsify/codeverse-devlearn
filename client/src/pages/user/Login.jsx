@@ -8,7 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../../components/auth/AuthCard";
 import { getUser } from "../../api/services/userService";
 import { userLogin } from "../../api/services/userService";
-import { adminPath, userPath } from "../../routes/routeConfig";
+import { userPath } from "../../routes/routeConfig";
 import { showLoading, hideLoading } from "../../utils/alertSlice";
 
 function Login() {
