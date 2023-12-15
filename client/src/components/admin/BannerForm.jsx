@@ -1,9 +1,9 @@
+import PropTypes from "prop-types";
+import { Image } from "cloudinary-react";
 import { useEffect, useState } from "react";
+import { cloudUpload } from "../../api/cloudinary";
 import { FileImageOutlined } from "@ant-design/icons";
 import { Button, Modal, Form, Input, Upload } from "antd";
-import { Image } from "cloudinary-react";
-import { cloudUpload } from "../../api/cloudinary";
-import PropTypes from "prop-types";
 
 function BannerForm({ visible, onCreate, onCancel, editData }) {
   const [form] = Form.useForm();

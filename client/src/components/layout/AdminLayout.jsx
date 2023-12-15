@@ -1,31 +1,30 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import { adminPath } from "../../routes/routeConfig";
 import { adminActions } from "../../utils/adminSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  BarChartOutlined,
+  MenuOutlined,
   TeamOutlined,
   FundOutlined,
+  CloseOutlined,
   LaptopOutlined,
-  YoutubeOutlined,
   GithubOutlined,
+  YoutubeOutlined,
   SettingOutlined,
   MessageOutlined,
+  BarChartOutlined,
   LeftCircleFilled,
   PoweroffOutlined,
-  MenuOutlined,
-  CloseOutlined,
 } from "@ant-design/icons";
-import PropTypes from "prop-types";
-import { adminPath } from "../../routes/routeConfig";
 
 function AdminLayout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [open, setOpen] = useState(true);
   const [nav, setNav] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const adminMenu = [
     {
@@ -36,9 +35,9 @@ function AdminLayout({ children }) {
     },
     {
       id: 2,
-      title: "Users",
-      icon: <TeamOutlined />,
-      path: `/admin/${adminPath.userManage}`,
+      title: "Feedbacks",
+      icon: <MessageOutlined />,
+      path: `/admin/${adminPath.feedback}`,
     },
     {
       id: 3,
@@ -47,16 +46,16 @@ function AdminLayout({ children }) {
       path: `/admin/${adminPath.bannerManage}`,
     },
     {
-      id: 4,
-      title: "Services",
-      icon: <LaptopOutlined />,
-      path: `/admin/${adminPath.serviceManage}`,
-    },
-    {
-      id: 5,
+      id:4 ,
       title: "Projects",
       icon: <GithubOutlined />,
       path: `/admin/${adminPath.projectManage}`,
+    },
+    {
+      id: 5,
+      title: "Services",
+      icon: <LaptopOutlined />,
+      path: `/admin/${adminPath.serviceManage}`,
     },
     {
       id: 6,
@@ -72,11 +71,12 @@ function AdminLayout({ children }) {
     },
     {
       id: 8,
-      title: "Messages",
-      icon: <MessageOutlined />,
-      path: `/admin/${adminPath.messageSession}`,
+      title: "Users",
+      icon: <TeamOutlined />,
+      path: `/admin/${adminPath.userManage}`,
     },
   ];
+
   return (
     <div className="container mx-auto flex">
       <aside className="h-screen px-2 hidden md:flex">
@@ -144,7 +144,6 @@ function AdminLayout({ children }) {
       <main className="w-full p-2 overflow-y-scroll h-screen scrollable-container">
         {children}
       </main>
-
       {nav && (
         <div className="flex top-0 bottom-0 left-0 w-full p-3 fixed z-40">
           <ul className="flex flex-col justify-center items-center rounded-xl w-full shadow-black shadow-md bg-dark-purple ">
@@ -181,12 +180,11 @@ function AdminLayout({ children }) {
           </ul>
         </div>
       )}
-
       <div className="py-4 px-4 box-border w-full flex justify-center bottom-0 left-0 fixed z-50 md:hidden">
         <div className="w-[99%] bg-dark-purple py-4 flex justify-around items-center px-4 shadow-black shadow-md rounded-2xl">
           <div className="flex justify-around w-full container items-center">
             <div
-              onClick={() => navigate(`/admin/${adminPath.messageSession}`)}
+              onClick={() => navigate(`/admin/${adminPath.feedback}`)}
               className="flex items-center text-white hover:bg-light-white transition duration-300 cursor-pointer rounded-xl px-2 text-2xl"
             >
               <MessageOutlined />

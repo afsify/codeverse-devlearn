@@ -6,11 +6,11 @@ export const userLogin = (values) => {
   return userAxiosInstance.post("/login", values);
 };
 
-export const sendOtp = (values) => {
+export const sendOTP = (values) => {
   return userAxiosInstance.post("/send-otp", values);
 };
 
-export const verifyOtp = (values) => {
+export const verifyOTP = (values) => {
   return userAxiosInstance.post("/verify-otp", values);
 };
 
@@ -24,8 +24,8 @@ export const forgotPassword = (values) => {
   return userAxiosInstance.post("/forgot-password", values);
 };
 
-export const otpCheck = (values) => {
-  return userAxiosInstance.post("/otp-check", values);
+export const checkOTP = (values) => {
+  return userAxiosInstance.post("/check-otp", values);
 };
 
 export const resetPassword = (values) => {
@@ -48,18 +48,18 @@ export const listService = () => {
   return userAxiosInstance.get("/list-service");
 };
 
-export const getService = (serviceId) => {
-  return userAxiosInstance.get(`/get-service/${serviceId}`);
-};
-
 //? ================================================ Course ================================================
 
 export const listCourse = () => {
   return userAxiosInstance.get("/list-course");
 };
 
+export const getCourse = (courseId) => {
+  return userAxiosInstance.get(`/list-course/${courseId}`);
+};
+
 export const createOrder = (values) => {
-  return userAxiosInstance.post("/create-order",values);
+  return userAxiosInstance.post("/create-order", values);
 };
 
 export const listOrder = () => {
@@ -70,6 +70,9 @@ export const listOrder = () => {
 
 export const primePayment = (values) => {
   return userAxiosInstance.post("/prime-payment", values);
+};
+export const contactMessage = (values) => {
+  return userAxiosInstance.post("/contact-message", values);
 };
 
 //? ================================================= About =================================================
@@ -82,4 +85,44 @@ export const getAbout = () => {
 
 export const updateProfile = (values) => {
   return userAxiosInstance.post("/update-profile", values);
+};
+
+export const findUser = (searchTerm) => {
+  return userAxiosInstance.get(`/find-user?search=${searchTerm}`);
+};
+
+//? ================================================= Chat =================================================
+
+export const accessChat = (values) => {
+  return userAxiosInstance.post("/access-chat", values);
+};
+
+export const fetchChat = () => {
+  return userAxiosInstance.get("/fetch-chat");
+};
+
+export const createGroup = (values) => {
+  return userAxiosInstance.post("/create-group", values);
+};
+
+export const editGroup = (chatId, values) => {
+  return userAxiosInstance.post(`/edit-group/${chatId}`, values);
+};
+
+export const groupRemove = (values) => {
+  return userAxiosInstance.put("/group-remove", values);
+};
+
+export const groupAdd = (values) => {
+  return userAxiosInstance.put("/group-add", values);
+};
+
+//? ================================================ Message ================================================
+
+export const listMessage = (chatId) => {
+  return userAxiosInstance.get(`/list-message/${chatId}`);
+};
+
+export const sendMessage = (values) => {
+  return userAxiosInstance.post("/send-message", values);
 };

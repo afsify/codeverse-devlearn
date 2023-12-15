@@ -22,6 +22,10 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    preview: {
+      type: String,
+      required: true,
+    },
     videos: [
       {
         type: String,

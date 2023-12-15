@@ -107,7 +107,11 @@ export const insertCourse = (values) => {
 };
 
 export const editCourse = (courseId, values) => {
-  return adminAxiosInstance.delete(`/edit-course/${courseId}`, values);
+  return adminAxiosInstance.post(`/edit-course/${courseId}`, values);
+};
+
+export const courseStatus = (courseId, status) => {
+  return adminAxiosInstance.post(`/course-status/${courseId}`, { status });
 };
 
 export const deleteCourse = (courseId) => {
@@ -116,6 +120,12 @@ export const deleteCourse = (courseId) => {
 
 //? =============================================== Settings ===============================================
 
+export const listFeedback = () => {
+  return adminAxiosInstance.get("/list-feedback");
+};
+
+//? =============================================== Settings ===============================================
+
 export const updateAbout = (adminId, values) => {
-  return adminAxiosInstance.put(`/update-about/${adminId}`, values);
+  return adminAxiosInstance.post(`/update-about/${adminId}`, values);
 };

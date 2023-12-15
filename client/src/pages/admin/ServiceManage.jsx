@@ -1,31 +1,31 @@
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import Title from "../../components/admin/Title";
+import { Button, Empty, Modal, Switch } from "antd";
+import ServiceForm from "../../components/admin/ServiceForm";
+import AdminLayout from "../../components/layout/AdminLayout";
+import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
   EditOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { Button, Empty, Modal, Switch } from "antd";
-import toast from "react-hot-toast";
-import AdminLayout from "../../components/layout/AdminLayout";
 import {
   listService,
-  insertService,
   editService,
+  insertService,
   serviceStatus,
   deleteService,
 } from "../../api/services/adminService";
-import Title from "../../components/admin/Title";
-import { useDispatch } from "react-redux";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
-import ServiceForm from "../../components/admin/ServiceForm";
 
 function ServiceManage() {
   const dispatch = useDispatch();
-  const [services, setServices] = useState([]);
   const [size] = useState("large");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [services, setServices] = useState([]);
   const [editData, setEditData] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {

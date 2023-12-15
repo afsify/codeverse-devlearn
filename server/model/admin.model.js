@@ -13,13 +13,15 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image: String,
+  resume: String,
   phone: String,
   address: String,
   contact: {
-    instagram: String,
     linkedIn: String,
     github: String,
-    twitter: String,
+    instagram: String,
+    whatsapp: String,
   },
   education: [
     {

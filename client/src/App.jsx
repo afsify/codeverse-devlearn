@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UserRoute from "./routes/UserRoute";
+import AdminRoute from "./routes/AdminRoute";
 import Toaster from "./components/constant/Toaster";
 import Spinner from "./components/constant/Spinner";
-import AdminRoute from "./routes/AdminRoute";
-import UserRoute from "./routes/UserRoute";
 
 function App() {
   return (

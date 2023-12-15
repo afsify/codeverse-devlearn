@@ -1,13 +1,13 @@
-import { Button, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
-import { adminLogin } from "../../api/services/adminService";
+import { Button, Form, Input } from "antd";
 import { GoogleLogin } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
+import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../../components/auth/AuthCard";
+import { adminLogin } from "../../api/services/adminService";
 import { adminPath, userPath } from "../../routes/routeConfig";
+import { hideLoading, showLoading } from "../../utils/alertSlice";
 
 function Signin() {
   const navigate = useNavigate();
@@ -59,15 +59,12 @@ function Signin() {
 
   return (
     <AuthCard>
-      <Link to={userPath.login}>
-        <h2 className="font-bold text-3xl text-dark-purple">Signin</h2>
-      </Link>
+      <h2 className="font-bold text-3xl text-dark-purple">Signin</h2>
       <p className="text-sm mt-3 text-dark-purple">
         Signin as admin to access admin panel
       </p>
-
       <Form className="flex flex-col mt-3" onFinish={onFinish}>
-      <Form.Item
+        <Form.Item
           name="email"
           rules={[
             {

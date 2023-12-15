@@ -1,9 +1,11 @@
-const courseModel = require("../model/course.model");
-const orderModel = require("../model/order.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const adminModel = require("../model/admin.model");
-const userModel = require("../model/user.model");
+const userModel = require("../../model/user.model");
+const adminModel = require("../../model/admin.model");
+const orderModel = require("../../model/order.model");
+const courseModel = require("../../model/course.model");
+const contactModel = require("../../model/contact.model");
+const projectModel = require("../../model/project.model");
 
 //! ============================================== Verify Login ==============================================
 
@@ -43,7 +45,6 @@ const signin = async (req, res, next) => {
 const getAdmin = async (req, res, next) => {
   try {
     let adminData = await adminModel.findById(req.adminId, {
-      _id: 0,
       password: 0,
     });
     if (adminData) {
@@ -78,6 +79,8 @@ const listDashboard = async (req, res, next) => {
       .exec();
     const orderCount = await orderModel.countDocuments();
     const courseCount = await courseModel.countDocuments();
+    const contactCount = await contactModel.countDocuments();
+    const projectCount = await projectModel.countDocuments();
     const primeMembersCount = await userModel.countDocuments({ prime: true });
     const normalUsersCount = await userModel.countDocuments({ prime: false });
     const totalMembersCount = await userModel.countDocuments();
@@ -88,6 +91,8 @@ const listDashboard = async (req, res, next) => {
       orders,
       orderCount,
       courseCount,
+      contactCount,
+      projectCount,
       primeMembersCount,
       normalUsersCount,
       totalMembersCount,
@@ -174,81 +179,16 @@ const unblockUser = async (req, res, next) => {
   }
 };
 
-//! =============================================== Add Course ===============================================
+//! ============================================== List Feedback ==============================================
 
-const insertCourse = async (req, res, next) => {
+const listFeedback = async (req, res, next) => {
   try {
-    const courseExists = await courseModel.findOne({ title: req.body.title });
-    if (courseExists) {
-      return res
-        .status(200)
-        .send({ message: "Course Already Exists", success: false });
-    }
-    const newCourse = new courseModel(req.body);
-    await newCourse.save();
-    res
-      .status(200)
-      .json({ message: "Course Created Successfully", success: true });
-  } catch (error) {
-    next(error);
-    res.status(500).json({ success: false, message: "Error Occurred" });
-  }
-};
-
-//! ============================================== List Courses ==============================================
-
-const listCourse = async (req, res, next) => {
-  try {
-    const courses = await courseModel.find({});
+    const feedbacks = await contactModel.find({});
     res.status(200).json({
-      message: "Courses Fetched Successfully",
+      message: "Feedbacks Fetched",
       success: true,
-      data: courses,
+      data: feedbacks,
     });
-  } catch (error) {
-    next(error);
-    res.status(500).json({ success: false, message: "Error Occurred" });
-  }
-};
-
-//! =============================================== Edit Course ===============================================
-
-const editCourse = async (req, res, next) => {
-  try {
-    const { title, description } = req.body;
-    const courseId = req.params.courseId;
-    const course = await courseModel.findById(courseId);
-    if (!course) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Course not found" });
-    }
-    course.title = title;
-    course.description = description;
-    await course.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Course Updated Successfully" });
-  } catch (error) {
-    next(error);
-    res.status(500).json({ success: false, message: "Error Occurred" });
-  }
-};
-
-//! ============================================== Delete Course ==============================================
-
-const deleteCourse = async (req, res, next) => {
-  try {
-    const courseId = req.params.courseId;
-    const course = await courseModel.findOneAndDelete({ _id: courseId });
-    if (!course) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Course Not Found" });
-    }
-    res
-      .status(200)
-      .json({ success: true, message: "Course Deleted Successfully" });
   } catch (error) {
     next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
@@ -259,11 +199,34 @@ const deleteCourse = async (req, res, next) => {
 
 const updateAbout = async (req, res, next) => {
   try {
-    const updatedAdmin = await adminModel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const {
+      name,
+      email,
+      image,
+      resume,
+      phone,
+      address,
+      contact,
+      education,
+      skill,
+    } = req.body;
+    const adminId = req.params.adminId;
+    const admin = await adminModel.findById(adminId);
+    if (!admin) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Admin not found" });
+    }
+    admin.name = name;
+    admin.email = email;
+    admin.phone = phone;
+    admin.image = image;
+    admin.resume = resume;
+    admin.address = address;
+    admin.contact = contact;
+    admin.education = education;
+    admin.skill = skill;
+    const updatedAdmin = await admin.save();
     return res.status(200).send({
       success: true,
       data: updatedAdmin,
@@ -282,9 +245,6 @@ module.exports = {
   listUser,
   blockUser,
   unblockUser,
-  listCourse,
-  insertCourse,
-  editCourse,
-  deleteCourse,
+  listFeedback,
   updateAbout,
 };

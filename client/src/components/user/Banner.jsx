@@ -1,13 +1,13 @@
+import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { listBanner } from "../../api/services/userService";
-import { useDispatch } from "react-redux";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 
 function Banner() {
-  const [banners, setBanners] = useState([]);
   const dispatch = useDispatch();
+  const [banners, setBanners] = useState([]);
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -24,7 +24,7 @@ function Banner() {
       }
     };
     fetchBanners();
-  }, []);
+  }, [dispatch]);
 
   return (
     <Carousel

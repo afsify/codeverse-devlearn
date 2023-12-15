@@ -1,15 +1,15 @@
-import { Button, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { showLoading, hideLoading } from "../../utils/alertSlice";
-import { userLogin } from "../../api/services/userService";
-import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { Button, Form, Input } from "antd";
+import { GoogleLogin } from "@react-oauth/google";
+import { userPath } from "../../routes/routeConfig";
+import { userActions } from "../../utils/userSlice";
+import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../../components/auth/AuthCard";
 import { getUser } from "../../api/services/userService";
-import { userActions } from "../../utils/userSlice";
-import { adminPath, userPath } from "../../routes/routeConfig";
+import { userLogin } from "../../api/services/userService";
+import { showLoading, hideLoading } from "../../utils/alertSlice";
 
 function Login() {
   const navigate = useNavigate();
@@ -58,23 +58,38 @@ function Login() {
         email: credential.email,
         password: credential.sub,
         exp: credential.exp,
+        image: credential.picture,
       };
+      dispatch(showLoading());
       const loginResponse = await userLogin(values);
+      dispatch(hideLoading());
       if (loginResponse.data.success) {
-        toast.success(loginResponse.data.message);
-        localStorage.setItem("userToken", loginResponse.data.token);
-        dispatch(userActions.userLogin());
-        const userResponse = await getUser();
-        const encodedUserData = btoa(
-          JSON.stringify(userResponse.data.userData)
-        );
-        localStorage.setItem("userData", encodedUserData);
-        navigate(userPath.home);
+        if (loginResponse.data.token) {
+          localStorage.setItem("userToken", loginResponse.data.token);
+          dispatch(userActions.userLogin());
+          const userResponse = await getUser();
+          const encodedUserData = btoa(
+            JSON.stringify(userResponse.data.userData)
+          );
+          localStorage.setItem("userData", encodedUserData);
+          toast.success(loginResponse.data.message);
+          navigate(userPath.home);
+        }
       } else {
-        toast.error(loginResponse.data.message);
+        if (loginResponse.data.message) {
+          toast.error(loginResponse.data.message);
+        } else {
+          toast.error("Unknown Error");
+        }
       }
     } catch (error) {
+      dispatch(hideLoading());
       console.error(error);
+      if (error.response && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -85,9 +100,7 @@ function Login() {
 
   return (
     <AuthCard>
-      <Link to={adminPath.signin}>
-        <h2 className="font-bold text-3xl text-dark-purple">Login</h2>
-      </Link>
+      <h2 className="font-bold text-3xl text-dark-purple">Login</h2>
       <p className="text-sm mt-3 text-dark-purple">
         If you are already a member, easily log in
       </p>
@@ -144,7 +157,7 @@ function Login() {
         <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
       </div>
       <div className="mt-3 text-sm flex justify-center items-center text-dark-purple py-4">
-        <p>Dont have an account?</p>
+        <p>Don&apos;t have an account?</p>
         <Link
           to={userPath.register}
           className="pl-1 text-blue-900 font-semibold hover:text-blue-500 hover:underline"

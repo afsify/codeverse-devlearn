@@ -1,11 +1,10 @@
-import { JaaSMeeting} from "@jitsi/react-sdk";
+import { JaaSMeeting } from "@jitsi/react-sdk";
 
 const Meeting = () => {
   return (
     <JaaSMeeting
-      appId="vpaas-magic-cookie-5814ee87e8c248b5b1800add388455d3"
+      appId={import.meta.env.VITE_JITSI_ID}
       roomName="CODEVERSE"
-      // jwt = { YOUR_VALID_JWT }
       configOverwrite={{
         disableThirdPartyRequests: true,
         disableLocalVideoFlip: true,
@@ -29,8 +28,6 @@ const Meeting = () => {
         MOBILE_APP_PROMO: false,
         TILE_VIEW_MAX_COLUMNS: 4,
       }}
-      // spinner = { SpinnerView }
-      // onApiReady = { (externalApi) => { } }
       getIFrameRef={(iframeRef) => {
         iframeRef.style.height = "100vh";
         iframeRef.style.width = "201vh";

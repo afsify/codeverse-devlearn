@@ -1,179 +1,36 @@
-import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
+import { Button, Input } from "antd";
+import { useDispatch } from "react-redux";
+import Title from "../../components/admin/Title";
+import { useEffect, useRef, useState } from "react";
+import CourseForm from "../../components/admin/CourseForm";
+import AdminLayout from "../../components/layout/AdminLayout";
+import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
   EditOutlined,
   DeleteOutlined,
+  SearchOutlined,
   PlusCircleOutlined,
-  UploadOutlined,
+  PlayCircleOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
-import { Button, Modal, Form, Input, Upload } from "antd";
-import toast from "react-hot-toast";
-import AdminLayout from "../../components/layout/AdminLayout";
 import {
-  deleteCourse,
   listCourse,
-  insertCourse,
   editCourse,
+  insertCourse,
+  deleteCourse,
 } from "../../api/services/adminService";
-import Title from "../../components/admin/Title";
-import { useDispatch } from "react-redux";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
-import { cloudUpload } from "../../api/cloudinary";
-import PropTypes from "prop-types";
-
-function CourseForm({ visible, onCreate, onCancel, editData }) {
-  const [form] = Form.useForm();
-  const [videoUrls, setVideoUrls] = useState(editData ? editData.videos : []);
-  const [imageFile, setImageFile] = useState(editData ? editData.image : "");
-  const [uploading, setUploading] = useState(false);
-
-  useEffect(() => {
-    if (editData) {
-      form.setFieldsValue(editData);
-    }
-  }, [editData, form]);
-
-  const handleImageUpload = async (file) => {
-    try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", import.meta.env.VITE_CLOUD_PRESET);
-      const response = await cloudUpload(formData);
-      setImageFile(response.data.secure_url);
-      setUploading(false);
-    } catch (error) {
-      console.error("Error uploading image to Cloudinary:", error);
-      setUploading(false);
-    }
-  };
-
-  const handleVideoUpload = async (file) => {
-    try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", import.meta.env.VITE_CLOUD_PRESET);
-      const response = await cloudUpload(formData);
-      const newVideoUrl = response.data.secure_url;
-      setVideoUrls([...videoUrls, newVideoUrl]);
-      setUploading(false);
-    } catch (error) {
-      console.error("Error uploading video to Cloudinary:", error);
-      setUploading(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const values = await form.validateFields();
-      form.resetFields();
-      onCreate({ ...values, videos: videoUrls, image: imageFile });
-    } catch (error) {
-      console.log("Validation failed:", error);
-    }
-  };
-
-  const removeVideo = (url) => {
-    const updatedUrls = videoUrls.filter((video) => video !== url);
-    setVideoUrls(updatedUrls);
-  };
-
-  return (
-    <Modal
-      visible={visible}
-      title={editData ? "Edit Course" : "Insert Course"}
-      okText={editData ? "Save" : "Create"}
-      cancelText="Cancel"
-      onCancel={onCancel}
-      onOk={handleSubmit}
-    >
-      <Form form={form} layout="vertical">
-        <Form.Item
-          name="title"
-          label="Title"
-          rules={[{ required: true, message: "Please Enter a Title" }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="description"
-          label="Description"
-          rules={[{ required: true, message: "Please Enter a Description" }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-        <Form.Item
-          name="price"
-          label="Price"
-          rules={[{ required: true, message: "Please Enter a Price" }]}
-        >
-          <Input type="number" />
-        </Form.Item>
-        <Form.Item label="Image">
-          <Upload
-            name="image"
-            listType="picture-card"
-            showUploadList={false}
-            customRequest={({ file }) => handleImageUpload(file)}
-          >
-            {imageFile ? (
-              <img
-                src={imageFile}
-                alt="Course Image"
-                style={{ maxWidth: "100%" }}
-              />
-            ) : (
-              <Button icon={<PlusCircleOutlined />}>Upload Image</Button>
-            )}
-          </Upload>
-        </Form.Item>
-        <Form.Item label="Video Upload">
-          <Upload
-            name="video"
-            showUploadList={false}
-            customRequest={({ file }) => handleVideoUpload(file)}
-          >
-            <Button icon={<UploadOutlined />}>Upload Video</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item label="Video URLs">
-          {videoUrls.map((videoUrl, index) => (
-            <div key={index}>
-              <Input
-                type="text"
-                placeholder="Enter Video URL"
-                value={videoUrl}
-                readOnly
-              />
-              <Button
-                type="text"
-                icon={<DeleteOutlined />}
-                onClick={() => removeVideo(videoUrl)}
-              />
-            </div>
-          ))}
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="dashed"
-            icon={<PlusCircleOutlined />}
-            onClick={() => setVideoUrls([...videoUrls, ""])}
-          >
-            Add Video URL
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-}
 
 function CourseManage() {
+  const inputRef = useRef(null);
   const dispatch = useDispatch();
-
-  const [courses, setCourses] = useState([]);
   const [size] = useState("large");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [courses, setCourses] = useState([]);
   const [editData, setEditData] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -183,14 +40,17 @@ function CourseManage() {
         dispatch(hideLoading());
         const courseData = response.data.data;
         setCourses(courseData);
+        setFilteredCourses(courseData);
       } catch (error) {
         dispatch(hideLoading());
         console.error("Error fetching courses:", error);
         setCourses([]);
+        setFilteredCourses([]);
       }
     };
     fetchCourses();
-  }, []);
+    inputRef.current && inputRef.current.focus();
+  }, [dispatch]);
 
   const editCourseHandler = (courseId, title, description) => {
     const courseToEdit = {
@@ -210,26 +70,29 @@ function CourseManage() {
           (course) => course._id !== courseId
         );
         setCourses(updatedCourses);
+        setFilteredCourses(updatedCourses);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const insertCourseHandler = async (values) => {
+  const insertCourseHandler = async (formData) => {
     try {
-      const response = await insertCourse(values);
+      dispatch(showLoading());
+      const response = await insertCourse(formData);
+      dispatch(hideLoading());
       if (response.data.success) {
-        const updatedCoursesResponse = await listCourse();
-        const updatedCoursesData = updatedCoursesResponse.data;
-        setCourses(updatedCoursesData);
+        const newCourse = response.data.savedCourse;
+        setCourses([...courses, newCourse]);
+        setFilteredCourses([...courses, newCourse]);
         setIsModalVisible(false);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Something went wrong");
     }
   };
@@ -241,6 +104,7 @@ function CourseManage() {
         const updatedCoursesResponse = await listCourse();
         const updatedCoursesData = updatedCoursesResponse.data;
         setCourses(updatedCoursesData);
+        setFilteredCourses(updatedCoursesData);
         setIsModalVisible(false);
         toast.success(response.data.message);
       } else {
@@ -260,61 +124,136 @@ function CourseManage() {
     setIsModalVisible(false);
   };
 
+  const handleSearchInputChange = (e) => {
+    const input = e.target.value;
+    setSearchInput(input);
+    filterCourses(input);
+  };
+
+  const filterCourses = (input) => {
+    const filtered = courses.filter((course) =>
+      course.title.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredCourses(filtered);
+  };
+
+  const clearSearchInput = () => {
+    setSearchInput("");
+    setFilteredCourses(courses);
+  };
+
   return (
     <AdminLayout>
       <Title>
         <h2 className="text-xl font-semibold">Courses</h2>
-        <Button className="text-white flex items-center" onClick={showModal}>
-          <PlusCircleOutlined />
-          Add Course
-        </Button>
+        <div className="flex items-center">
+          <Button
+            className="text-white flex items-center ms-3"
+            onClick={showModal}
+          >
+            <PlusCircleOutlined />
+            Add Course
+          </Button>
+        </div>
       </Title>
-
-      <div className="overflow-x-auto rounded-xl mt-5">
+      <div className="flex justify-center mt-3 mb-2">
+        <Input
+          ref={inputRef}
+          placeholder="Search courses"
+          value={searchInput}
+          onChange={handleSearchInputChange}
+          className="rounded-md py-2 w-96"
+          prefix={
+            <SearchOutlined style={{ color: "#1890ff", marginRight: "5px" }} />
+          }
+          suffix={
+            searchInput && (
+              <CloseCircleOutlined
+                style={{ color: "#1890ff", cursor: "pointer" }}
+                onClick={clearSearchInput}
+              />
+            )
+          }
+        />
+      </div>
+      <div className="overflow-x-auto rounded-xl">
         <table className="w-full table-auto border-collapse border border-gray-300 shadow-md shadow-black">
           <thead className="bg-dark-purple text-white">
             <tr>
               <th className="text-center border border-gray-300 py-2">#</th>
               <th className="text-center border border-gray-300 py-2">Title</th>
-              <th className="text-center border border-gray-300 py-2">
+              <th className="text-center border border-gray-300 py-2 px-16">
                 Videos
               </th>
               <th className="text-center border border-gray-300 py-2">
                 Description
               </th>
               <th className="text-center border border-gray-300 py-2">Price</th>
-              <th className="text-center border border-gray-300 py-2">
+              <th className="text-center border border-gray-300 py-2 px-8">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-            {courses &&
-              courses.map((course, index) => (
-                <tr
-                  key={course._id}
-                  className="bg-gray-100 hover:bg-gray-200"
-                >
+            {filteredCourses &&
+              filteredCourses.map((course, index) => (
+                <tr key={index} className="bg-gray-100 hover:bg-gray-200">
                   <td className="text-center border border-gray-300 py-2 px-2">
                     {index + 1}
                   </td>
                   <td className="text-center border border-gray-300 py-2">
                     {course.title}
                   </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    {course.videos.map((video, index) => (
-                      <div key={index}>
-                        <iframe
-                          width="186"
-                          height="105"
-                          src={video}
-                          title="YouTube video player"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
-                      </div>
-                    ))}
+                  <td className="text-center border border-gray-300 py-2 w-48">
+                    <div className="flex flex-col gap-2">
+                      <a
+                        href={course.preview}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
+                      >
+                        <div className="relative">
+                          <img
+                            src={course.image}
+                            alt={`Video Thumbnail ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-t-lg transition duration-300 group-hover:opacity-75 relative"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition duration-300 group-hover:bg-opacity-75">
+                            <PlayCircleOutlined className="text-white text-4xl opacity-40 group-hover:opacity-100 transition duration-300" />
+                          </div>
+                        </div>
+                        <div className="absolute bottom-0 left-0 w-full p-2">
+                          <p className="text-white text-xs font-semibold font-sans group-hover:underline">
+                            Preview
+                          </p>
+                        </div>
+                      </a>
+                      {course.videos.map((video, index) => (
+                        <a
+                          href={video}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          key={index}
+                          className="relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
+                        >
+                          <div className="relative">
+                            <img
+                              src={course.image}
+                              alt={`Video Thumbnail ${index + 1}`}
+                              className="w-full h-24 object-cover rounded-t-lg transition duration-300 group-hover:opacity-75 relative"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition duration-300 group-hover:bg-opacity-75">
+                              <PlayCircleOutlined className="text-white text-4xl opacity-40 group-hover:opacity-100 transition duration-300" />
+                            </div>
+                          </div>
+                          <div className="absolute bottom-0 left-0 w-full p-2">
+                            <p className="text-white text-xs font-semibold font-sans group-hover:underline">
+                              Video {index + 1}
+                            </p>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
                   </td>
                   <td className="text-center border border-gray-300 py-2 max-w-md">
                     {course.description}

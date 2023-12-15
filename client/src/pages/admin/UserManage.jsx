@@ -1,47 +1,50 @@
-import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import Title from "../../components/admin/Title";
+import { useEffect, useRef, useState } from "react";
+import imageLinks from "../../assets/images/imageLinks";
+import AdminLayout from "../../components/layout/AdminLayout";
+import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
-  Button,
   Modal,
-  Tooltip,
-  Pagination,
-  Select,
   Input,
   Space,
   Empty,
+  Button,
+  Select,
+  Tooltip,
+  Pagination,
 } from "antd";
 import {
-  CheckCircleFilled,
-  ExclamationCircleFilled,
-  EyeInvisibleOutlined,
   EyeOutlined,
-  SearchOutlined,
-  CloseCircleOutlined,
   CrownFilled,
+  SearchOutlined,
+  CheckCircleFilled,
+  CloseCircleOutlined,
+  EyeInvisibleOutlined,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
-import toast from "react-hot-toast";
-import AdminLayout from "../../components/layout/AdminLayout";
 import {
   listUser,
   blockUser,
   unblockUser,
 } from "../../api/services/adminService";
-import Title from "../../components/admin/Title";
-import { useDispatch } from "react-redux";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
 
 const { confirm } = Modal;
 const { Option } = Select;
 
 function UserManage() {
+  const inputRef = useRef(null);
   const dispatch = useDispatch();
-  const [users, setUsers] = useState([]);
   const [size] = useState("large");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [users, setUsers] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [sortBy, setSortBy] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
   const [filterPrime, setFilterPrime] = useState("all");
-  const [sortBy, setSortBy] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,7 +61,8 @@ function UserManage() {
       }
     };
     fetchUsers();
-  }, []);
+    inputRef.current && inputRef.current.focus();
+  }, [dispatch]);
 
   const blockUserHandler = async (userId) => {
     try {
@@ -176,6 +180,7 @@ function UserManage() {
         <h2 className="text-xl font-semibold">Users</h2>
         <Space>
           <Input
+            ref={inputRef}
             className="w-52"
             placeholder="Search"
             value={searchTerm}
@@ -241,10 +246,7 @@ function UserManage() {
                         </div>
                       ) : (
                         <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-sm shadow-black ">
-                          <img
-                            src="https://res.cloudinary.com/cloudverse/image/upload/v1695133216/CODEVERSE/g9vfctxt7chji6uwgcn0.jpg"
-                            alt="Default User"
-                          />
+                          <img src={imageLinks.profile} alt="Default User" />
                         </div>
                       )}
                     </div>

@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import { Layout, Row, Col, Card, Statistic, Table } from "antd";
-import {
-  BarChartOutlined,
-  FundOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import AdminLayout from "../../components/layout/AdminLayout";
-import Title from "../../components/admin/Title";
-import { listDashboard } from "../../api/services/adminService";
 import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import Title from "../../components/admin/Title";
+import imageLinks from "../../assets/images/imageLinks";
+import AdminLayout from "../../components/layout/AdminLayout";
+import { Layout, Row, Col, Card, Statistic, Table } from "antd";
+import { listDashboard } from "../../api/services/adminService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
+import {
+  FundOutlined,
+  UserOutlined,
+  BarChartOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 
 const { Content } = Layout;
 
@@ -54,15 +55,12 @@ function Dashboard() {
         <>
           <div className="cursor-pointer hover:scale-105 duration-300">
             {user.image ? (
-              <div className="overflow-hidden rounded-full w-10 h-10 mx-auto shadow-sm shadow-black ">
+              <div className="overflow-hidden rounded-full w-9 h-9 mx-auto shadow-sm shadow-black ">
                 <img src={user.image} alt="User" />
               </div>
             ) : (
-              <div className="overflow-hidden rounded-full w-10 h-10 mx-auto shadow-sm shadow-black ">
-                <img
-                  src="https://res.cloudinary.com/cloudverse/image/upload/v1695133216/CODEVERSE/g9vfctxt7chji6uwgcn0.jpg"
-                  alt="Default User"
-                />
+              <div className="overflow-hidden rounded-full w-9 h-9 mx-auto shadow-sm shadow-black ">
+                <img src={imageLinks.profile} alt="Default User" />
               </div>
             )}
           </div>
@@ -191,20 +189,20 @@ function Dashboard() {
               </Row>
             </Card>
             <Card
-              className="shadow-sm shadow-black mb-4"
-              title="Data Counts"
-              extra={<FundOutlined />}
+              className="shadow-sm shadow-black mb-4 pb-3"
             >
               <Row gutter={16}>
                 <Col span={12}>
                   <Statistic
-                    value={dashboard.orderCount}
+                    title="Feedbacks"
+                    value={dashboard.contactCount}
                     valueStyle={{ fontSize: "24px" }}
                   />
                 </Col>
                 <Col span={12}>
                   <Statistic
-                    value={dashboard.courseCount}
+                    title="Projects"
+                    value={dashboard.projectCount}
                     valueStyle={{ fontSize: "24px" }}
                   />
                 </Col>

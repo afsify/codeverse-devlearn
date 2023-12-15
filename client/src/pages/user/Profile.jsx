@@ -1,26 +1,25 @@
 import { useState } from "react";
-import UserLayout from "../../components/layout/UserLayout";
-import { useDispatch } from "react-redux";
-import { updateProfile } from "../../api/services/userService";
-import { Form, Input, Button, Upload } from "antd";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import { Image } from "cloudinary-react";
+import { useDispatch } from "react-redux";
+import { Form, Input, Button, Upload } from "antd";
 import { cloudUpload } from "../../api/cloudinary";
 import { CameraOutlined } from "@ant-design/icons";
+import imageLinks from "../../assets/images/imageLinks";
+import UserLayout from "../../components/layout/UserLayout";
+import { updateProfile } from "../../api/services/userService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
-import toast from "react-hot-toast";
 
 function Profile() {
   const dispatch = useDispatch();
   const encodedUserData = localStorage.getItem("userData");
   const userData = encodedUserData ? JSON.parse(atob(encodedUserData)) : null;
-
-  const defaultImage =
-    "https://res.cloudinary.com/cloudverse/image/upload/v1695133216/CODEVERSE/g9vfctxt7chji6uwgcn0.jpg";
-  const [image, setImage] = useState(userData?.image || defaultImage);
+  const [uploading, setUploading] = useState(false);
   const [name, setName] = useState(userData?.name || "");
   const [phone, setPhone] = useState(userData?.phone || "");
   const [place, setPlace] = useState(userData?.place || "");
-  const [uploading, setUploading] = useState(false);
+  const [image, setImage] = useState(userData?.image || imageLinks.profile);
 
   const onFinish = async () => {
     try {
@@ -60,6 +59,7 @@ function Profile() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const validateName = (rule) => {
     if (!name) {
       return Promise.reject("Please enter your name");
@@ -69,13 +69,37 @@ function Profile() {
 
   return (
     <UserLayout>
-      <section className="flex justify-center items-center">
-        <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md">
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
+        className="flex justify-center items-center"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md"
+        >
           <h2 className="text-3xl font-bold mb-4 text-center uppercase">
             Profile
           </h2>
-          <div className="w-40 h-40 mx-auto mb-6 relative">
-            <div className="overflow-hidden rounded-full w-40 h-40 mx-auto shadow-lg shadow-black">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.5 }}
+            className="w-40 h-40 mx-auto mb-6 relative"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.5 }}
+              className="overflow-hidden rounded-full w-40 h-40 mx-auto shadow-lg shadow-black"
+            >
               {uploading ? (
                 <div className="w-full h-full bg-gray-300 flex justify-center items-center">
                   <div className="relative h-24 w-24">
@@ -89,6 +113,7 @@ function Profile() {
                 </div>
               ) : (
                 <Image
+                  className="object-cover"
                   cloudName={import.meta.env.VITE_CLOUD_NAME}
                   publicId={image}
                   width="auto"
@@ -97,7 +122,7 @@ function Profile() {
                   alt="Profile"
                 />
               )}
-            </div>
+            </motion.div>
             <Upload
               customRequest={customRequest}
               accept="image/*"
@@ -107,7 +132,7 @@ function Profile() {
                 <CameraOutlined />
               </Button>
             </Upload>
-          </div>
+          </motion.div>
           <Input
             value={userData?.email}
             placeholder="Email"
@@ -127,17 +152,20 @@ function Profile() {
                 },
               ]}
             >
-              <label className="relative cursor-pointer">
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                className="relative cursor-pointer"
+              >
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Name"
                   className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
                 />
-                <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+                <motion.span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
                   Name
-                </span>
-              </label>
+                </motion.span>
+              </motion.label>
             </Form.Item>
             <Form.Item
               name="phone"
@@ -148,17 +176,20 @@ function Profile() {
                 },
               ]}
             >
-              <label className="relative cursor-pointer">
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                className="relative cursor-pointer"
+              >
                 <Input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Phone"
                   className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
                 />
-                <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+                <motion.span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
                   Phone
-                </span>
-              </label>
+                </motion.span>
+              </motion.label>
             </Form.Item>
             <Form.Item
               name="place"
@@ -169,17 +200,20 @@ function Profile() {
                 },
               ]}
             >
-              <label className="relative cursor-pointer">
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                className="relative cursor-pointer"
+              >
                 <Input
                   value={place}
                   onChange={(e) => setPlace(e.target.value)}
                   placeholder="Place"
                   className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
                 />
-                <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+                <motion.span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
                   Place
-                </span>
-              </label>
+                </motion.span>
+              </motion.label>
             </Form.Item>
             <Button
               size="large"
@@ -189,8 +223,8 @@ function Profile() {
               Update
             </Button>
           </Form>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
     </UserLayout>
   );
 }

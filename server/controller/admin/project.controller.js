@@ -1,4 +1,4 @@
-const projectModel = require("../model/project.model");
+const projectModel = require("../../model/project.model");
 
 //! ============================================== List Project ==============================================
 
@@ -78,22 +78,22 @@ const editProject = async (req, res, next) => {
 //! ============================================== Project Status ==============================================
 
 const projectStatus = async (req, res, next) => {
-    try {
-      const projectId = req.params.projectId;
-      const project = await projectModel.findById(projectId);
-      if (!project) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Project not Found" });
-      }
-      project.status = !project.status;
-      await project.save();
-      res.status(200).json({ success: true, message: "Status Updated" });
-    } catch (error) {
-      next(error);
-      res.status(500).json({ success: false, message: "Error Occurred" });
+  try {
+    const projectId = req.params.projectId;
+    const project = await projectModel.findById(projectId);
+    if (!project) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Project not Found" });
     }
-  };
+    project.status = !project.status;
+    await project.save();
+    res.status(200).json({ success: true, message: "Status Updated" });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, message: "Error Occurred" });
+  }
+};
 
 //! ============================================== Delete Project ==============================================
 

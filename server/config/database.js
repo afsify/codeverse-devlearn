@@ -6,11 +6,11 @@ const connectDB = async () => {
   const connection = mongoose.connection;
 
   connection.on("connected", () => {
-    console.log("MongoDB is Connected");
+    console.log("MongoDB Connected");
   });
 
   connection.on("error", (error) => {
-    console.log("MongoDB Connection Error", error);
+    console.log("MongoDB Error", error);
   });
 };
 

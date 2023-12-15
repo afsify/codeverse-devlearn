@@ -6,7 +6,7 @@ const adminBaseUrl = import.meta.env.VITE_ADMIN_URL;
 const createAxiosClient = (baseURL) => {
   const client = axios.create({
     baseURL,
-    timeout: 4000,
+    timeout: 10000,
     timeoutErrorMessage: "Request Timeout , Please Try Again",
   });
   return client;

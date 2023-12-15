@@ -1,4 +1,4 @@
-const serviceModel = require("../model/service.model");
+const serviceModel = require("../../model/service.model");
 
 //! ============================================== List Service ==============================================
 

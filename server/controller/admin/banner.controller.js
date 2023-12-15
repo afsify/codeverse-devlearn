@@ -1,4 +1,4 @@
-const bannerModel = require("../model/banner.model");
+const bannerModel = require("../../model/banner.model");
 
 //! ============================================== List Banners ==============================================
 

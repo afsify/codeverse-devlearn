@@ -17,7 +17,10 @@ const adminAuth = (req, res, next) => {
             success: false,
             auth: false,
           });
-        } else if (decoded.exp * 1000 > Date.now() && decoded.role === "admin") {
+        } else if (
+          decoded.exp * 1000 > Date.now() &&
+          decoded.role === "admin"
+        ) {
           req.adminId = decoded.id;
           next();
         } else {

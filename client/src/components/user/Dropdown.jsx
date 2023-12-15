@@ -1,24 +1,40 @@
-import { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { userPath } from "../../routes/routeConfig";
 import { userActions } from "../../utils/userSlice";
+import imageLinks from "../../assets/images/imageLinks";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   UserOutlined,
   MessageOutlined,
-  SettingOutlined,
+  PlaySquareOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import PropTypes from 'prop-types';
-import { userPath } from "../../routes/routeConfig";
+import { listOrder } from "../../api/services/userService";
 
 function Dropdown() {
+  const menuRef = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const menuRef = useRef();
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState(null);
-
+  const [userOrders, setUserOrders] = useState([]);
   const logged = localStorage.getItem("userToken") !== null;
+
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      try {
+        const response = await listOrder();
+        const userOrderData = response.data.data;
+        setUserOrders(userOrderData);
+      } catch (error) {
+        console.error("Error fetching user orders:", error);
+        setUserOrders([]);
+      }
+    };
+    fetchUserOrders();
+  }, [dispatch]);
 
   useEffect(() => {
     let handler = (e) => {
@@ -54,14 +70,10 @@ function Dropdown() {
           </div>
         ) : (
           <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-md shadow-black ">
-            <img
-              src="https://res.cloudinary.com/cloudverse/image/upload/v1695133216/CODEVERSE/g9vfctxt7chji6uwgcn0.jpg"
-              alt="Default User"
-            />
+            <img src={imageLinks.profile} alt="Default User" />
           </div>
         )}
       </div>
-
       {logged && userData && (
         <div
           className={`${
@@ -69,14 +81,14 @@ function Dropdown() {
           } absolute top-0 right-0 mt-16 w-48 p-4 bg-white text-black shadow-xl rounded-lg`}
           ref={menuRef}
         >
-          <h3 className="text-center text-lg uppercase font-semibold text-gray-700 ">
+          <h3 className="text-center text-lg uppercase font-semibold text-gray-700">
             {userData.name}
             <br />
             <span className="text-sm font-normal normal-case font-sans text-gray-500">
               {userData.email}
             </span>
           </h3>
-          <ul className="mt-4  space-y-2">
+          <ul className="mt-4 space-y-2">
             <DropdownItem
               text="My Profile"
               icon={<UserOutlined />}
@@ -87,11 +99,13 @@ function Dropdown() {
               icon={<MessageOutlined />}
               path={userPath.messages}
             />
-            <DropdownItem
-              text="Settings"
-              icon={<SettingOutlined />}
-              path={userPath.settings}
-            />
+            {userOrders.length > 0 && (
+              <DropdownItem
+                text="Library"
+                icon={<PlaySquareOutlined />}
+                path={userPath.library}
+              />
+            )}
             <li
               onClick={() => {
                 localStorage.removeItem("userToken");

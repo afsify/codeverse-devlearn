@@ -10,12 +10,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    phone: {
-      type: String,
-    },
-    place: {
-      type: String,
-    },
     password: {
       type: String,
       required: true,
@@ -28,6 +22,22 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    subscription: {
+      type: String,
+      default: "none",
+    },
+    startDate: {
+      type: Date,
+    },
+    endDate: {
+      type: Date,
+    },
+    phone: {
+      type: Number,
+    },
+    place: {
+      type: String,
+    },
     image: {
       type: String,
     },
@@ -36,6 +46,13 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", function (next) {
+  if (this.endDate && this.endDate <= Date.now()) {
+    this.prime = false;
+  }
+  next();
+});
 
 const userModel = mongoose.model("users", userSchema);
 

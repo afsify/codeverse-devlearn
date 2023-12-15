@@ -1,31 +1,31 @@
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import Title from "../../components/admin/Title";
+import { Empty, Button, Modal, Switch } from "antd";
+import ProjectForm from "../../components/admin/ProjectForm";
+import AdminLayout from "../../components/layout/AdminLayout";
+import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
   EditOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { Empty, Button, Modal, Switch } from "antd";
-import toast from "react-hot-toast";
-import AdminLayout from "../../components/layout/AdminLayout";
 import {
   listProject,
-  insertProject,
   editProject,
+  insertProject,
   projectStatus,
   deleteProject,
 } from "../../api/services/adminService";
-import Title from "../../components/admin/Title";
-import { useDispatch } from "react-redux";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
-import ProjectForm from "../../components/admin/ProjectForm";
 
 function ProjectManage() {
   const dispatch = useDispatch();
-  const [projects, setProjects] = useState([]);
   const [size] = useState("large");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [projects, setProjects] = useState([]);
   const [editData, setEditData] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchProjects = async () => {

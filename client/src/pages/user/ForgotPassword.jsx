@@ -1,11 +1,11 @@
-import { Button, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { showLoading, hideLoading } from "../../utils/alertSlice";
-import { forgotPassword } from "../../api/services/userService";
-import AuthCard from "../../components/auth/AuthCard";
+import { Button, Form, Input } from "antd";
 import { userPath } from "../../routes/routeConfig";
+import { Link, useNavigate } from "react-router-dom";
+import AuthCard from "../../components/auth/AuthCard";
+import { forgotPassword } from "../../api/services/userService";
+import { showLoading, hideLoading } from "../../utils/alertSlice";
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function ForgotPassword() {
       dispatch(hideLoading());
       if (response.data.success) {
         toast.success(response.data.message);
-        navigate(userPath.checkOTP, { state: { email: response.data.Email } });
+        navigate(userPath.resetOTP, { state: { email: response.data.email } });
       } else {
         toast.error(response.data.message);
       }
@@ -36,7 +36,16 @@ function ForgotPassword() {
         Enter email to reset your password
       </p>
       <Form className="flex flex-col mt-3" onFinish={onFinish}>
-        <Form.Item name="email">
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your email",
+              type: "email",
+            },
+          ]}
+        >
           <label className="relative cursor-pointer">
             <Input
               placeholder="Email"
@@ -61,7 +70,7 @@ function ForgotPassword() {
         <hr className="border-gray-400" />
       </div>
       <div className="mt-3 text-sm flex justify-center items-center text-dark-purple py-4">
-        <p>Dont have an account?</p>
+        <p>Don&apos;t have an account?</p>
         <Link
           to={userPath.register}
           className="pl-1 text-blue-900 font-semibold hover:text-blue-500 hover:underline"

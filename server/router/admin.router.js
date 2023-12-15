@@ -1,9 +1,10 @@
 const express = require("express");
 const admin_router = express.Router();
-const adminController = require("../controller/admin.controller");
-const bannerController = require("../controller/banner.controller");
-const serviceController = require("../controller/service.controller");
-const projectController = require("../controller/project.controller");
+const adminController = require("../controller/admin/admin.controller");
+const bannerController = require("../controller/admin/banner.controller");
+const courseController = require("../controller/admin/course.controller");
+const projectController = require("../controller/admin/project.controller");
+const serviceController = require("../controller/admin/service.controller");
 const { adminAuth } = require("../middleware/auth");
 
 //? ============================================= Authorization =============================================
@@ -47,13 +48,18 @@ admin_router.delete("/delete-project/:projectId", adminAuth, projectController.d
 
 //? ============================================= Course Manage =============================================
 
-admin_router.get("/list-course", adminAuth, adminController.listCourse);
-admin_router.post("/insert-course", adminAuth, adminController.insertCourse);
-admin_router.post("/edit-course/:courseId", adminAuth, adminController.editCourse);
-admin_router.delete("/delete-course/:courseId", adminAuth, adminController.deleteCourse);
+admin_router.get("/list-course", adminAuth, courseController.listCourse);
+admin_router.post("/insert-course", adminAuth, courseController.insertCourse);
+admin_router.post("/edit-course/:courseId", adminAuth, courseController.editCourse);
+admin_router.post("/course-status/:courseId", adminAuth, courseController.courseStatus);
+admin_router.delete("/delete-course/:courseId", adminAuth, courseController.deleteCourse);
+
+//? ================================================ Feedback ================================================
+
+admin_router.get("/list-feedback", adminAuth, adminController.listFeedback);
 
 //? ================================================ Settings ================================================
 
-admin_router.put("/update-about/:adminId", adminAuth, adminController.updateAbout);
+admin_router.post("/update-about/:adminId", adminAuth, adminController.updateAbout);
 
 module.exports = admin_router;

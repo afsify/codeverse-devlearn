@@ -1,16 +1,19 @@
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { getAdmin } from "../../api/services/adminService";
-import { getUser } from "../../api/services/userService";
 import { userActions } from "../../utils/userSlice";
-import { showLoading, hideLoading } from "../../utils/alertSlice";
-import PropTypes from "prop-types";
 import { userPath } from "../../routes/routeConfig";
+import { getUser } from "../../api/services/userService";
+import { getAdmin } from "../../api/services/adminService";
+import { showLoading, hideLoading } from "../../utils/alertSlice";
 
 function PrivateRoute({ role }) {
-  const [auth, setAuth] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [auth, setAuth] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +24,15 @@ function PrivateRoute({ role }) {
         } else if (role === "user") {
           const response = await getUser();
           if (response.data.auth) {
+            const isBlocked = response.data.userData.status === "blocked";
+            if (isBlocked) {
+              localStorage.removeItem("userToken");
+              localStorage.removeItem("userData");
+              dispatch(userActions.userLogout());
+              navigate(userPath.login);
+              toast.error("You were blocked");
+              return setAuth(false);
+            }
             dispatch(userActions.userLogin());
           } else {
             dispatch(userActions.userLogout());
@@ -35,7 +47,7 @@ function PrivateRoute({ role }) {
       }
     };
     fetchData();
-  }, [role, dispatch]);
+  }, [role, dispatch, navigate]);
 
   if (auth === null) {
     dispatch(showLoading());
