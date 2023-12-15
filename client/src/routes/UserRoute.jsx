@@ -1,5 +1,5 @@
-import { userPath } from "./routeConfig";
 import { Routes, Route } from "react-router-dom";
+import { userPath } from "./routeConfig";
 import Home from "../pages/user/Home";
 import Login from "../pages/user/Login";
 import About from "../pages/user/About";
@@ -16,8 +16,8 @@ import RegisterOTP from "../pages/user/RegisterOTP";
 import ServerError from "../pages/error/ServerError";
 import CourseDetail from "../pages/user/CourseDetail";
 import ResetPassword from "../pages/user/ResetPassword";
-import ForgotPassword from "../pages/user/ForgotPassword";
 import PublicRoute from "../components/auth/PublicRoute";
+import ForgotPassword from "../pages/user/ForgotPassword";
 import PrivateRoute from "../components/auth/PrivateRoute";
 
 function UserRoute() {

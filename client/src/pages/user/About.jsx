@@ -1,11 +1,11 @@
+import { Button } from "antd";
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import imageLinks from "../../assets/images/imageLinks";
 import { getAbout } from "../../api/services/userService";
 import UserLayout from "../../components/layout/UserLayout";
 import { showLoading, hideLoading } from "../../utils/alertSlice";
-import { Button } from "antd";
-import imageLinks from "../../assets/images/imageLinks";
-import { motion } from "framer-motion";
 
 function About() {
   const dispatch = useDispatch();
@@ -17,8 +17,8 @@ function About() {
         dispatch(showLoading());
         const response = await getAbout();
         dispatch(hideLoading());
-        const adminData = response.data.data;
-        setAdminData(adminData);
+        const adminDetail = response.data.data;
+        setAdminData(adminDetail);
       } catch (error) {
         dispatch(hideLoading());
         console.error("Error fetching About:", error);
@@ -27,10 +27,6 @@ function About() {
     };
     fetchAbout();
   }, [dispatch]);
-
-  if (!adminData.name) {
-    dispatch(showLoading());
-  }
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },

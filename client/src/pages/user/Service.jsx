@@ -1,6 +1,6 @@
 import { Input } from "antd";
 import { useDispatch } from "react-redux";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import UserLayout from "../../components/layout/UserLayout";
 import { listService } from "../../api/services/userService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -8,7 +8,6 @@ import { SearchOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 
 function Service() {
-  const inputRef = useRef(null);
   const dispatch = useDispatch();
   const [services, setServices] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -31,7 +30,6 @@ function Service() {
       }
     };
     fetchServices();
-    inputRef.current && inputRef.current.focus();
   }, [dispatch]);
 
   const handleSearchInputChange = (e) => {
@@ -65,7 +63,6 @@ function Service() {
         <h2 className="text-3xl font-semibold">Services</h2>
         <div className="flex items-center">
           <Input
-            ref={inputRef}
             placeholder="Search services"
             value={searchInput}
             onChange={handleSearchInputChange}

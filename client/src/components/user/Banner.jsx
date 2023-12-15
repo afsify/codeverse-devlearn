@@ -35,47 +35,30 @@ function Banner() {
       showStatus={false}
       interval={3000}
       stopOnHover={false}
-      emulateTouch={true}
+      emulateTouch={false}
       swipeable={true}
       transitionTime={500}
+      className="overflow-hidden"
     >
       {banners.map((banner, index) => (
-        <div key={index}>
+        <div key={index} className="relative h-full md:h-[84vh]">
           <div
+            className="w-full h-full bg-cover bg-center relative flex flex-col justify-center items-center text-center text-white overflow-hidden"
             style={{
               backgroundImage: `url(${banner.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              height: "84vh",
               borderRadius: "10px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              color: "#fff",
-              position: "relative",
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                borderRadius: "10px",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                zIndex: 1,
-              }}
-            ></div>
+            <div className="absolute inset-0 bg-black opacity-50"></div>
 
-            <div className="p-4" style={{ zIndex: 2 }}>
-              <h2 className="text-4xl font-bold mb-4">{banner.title}</h2>
-              <p className="text-xl mb-6">{banner.description}</p>
+            <div className="p-4 relative z-10">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
+                {banner.title}
+              </h2>
+              <p className="text-sm md:text-lg mb-4">{banner.description}</p>
               <a
                 href={banner.link}
-                className="text-blue-500 hover:underline text-lg"
+                className="text-blue-500 hover:underline text-base md:text-lg"
               >
                 Learn More
               </a>

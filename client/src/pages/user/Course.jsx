@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 import { userPath } from "../../routes/routeConfig";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button, Input, Tooltip, Pagination } from "antd";
 import UserLayout from "../../components/layout/UserLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -20,7 +20,6 @@ import {
 import { motion } from "framer-motion";
 
 function Course() {
-  const inputRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [itemsPerPage] = useState(8);
@@ -64,7 +63,6 @@ function Course() {
       }
     };
     fetchCourses();
-    inputRef.current && inputRef.current.focus();
   }, [dispatch]);
 
   const handlePaymentSuccess = async (token, course) => {
@@ -135,7 +133,6 @@ function Course() {
             </Tooltip>
           )}
           <Input
-            ref={inputRef}
             placeholder="Search courses"
             value={searchInput}
             onChange={handleSearchInputChange}

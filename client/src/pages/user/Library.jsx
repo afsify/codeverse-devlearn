@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
 import { Collapse, Input } from "antd";
 import { useDispatch } from "react-redux";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { listOrder } from "../../api/services/userService";
 import UserLayout from "../../components/layout/UserLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -92,7 +92,6 @@ VideoGridWithAnimation.propTypes = {
 };
 
 function Library() {
-  const inputRef = useRef(null);
   const dispatch = useDispatch();
   const [orders, setOrders] = useState([]);
   const [isPlaying, setPlaying] = useState(true);
@@ -117,7 +116,6 @@ function Library() {
       }
     };
     fetchOrders();
-    inputRef.current && inputRef.current.focus();
   }, [dispatch]);
 
   const handleSearchInputChange = (e) => {
@@ -154,7 +152,6 @@ function Library() {
         <h2 className="text-3xl font-semibold">Library</h2>
         <div className="flex items-center">
           <Input
-            ref={inputRef}
             placeholder="Search services"
             value={searchInput}
             onChange={handleSearchInputChange}

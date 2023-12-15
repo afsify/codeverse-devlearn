@@ -1,13 +1,11 @@
 import PropTypes from "prop-types";
+import { motion } from "framer-motion";
 import Dropdown from "../user/Dropdown";
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { userPath } from "../../routes/routeConfig";
 import { getAbout, getUser } from "../../api/services/userService";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { showLoading, hideLoading } from "../../utils/alertSlice";
-import { useDispatch } from "react-redux";
 import {
   GithubOutlined,
   LinkedinOutlined,
@@ -17,7 +15,6 @@ import {
 
 const UserLayout = ({ children }) => {
   const location = useLocation();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [nav, setNav] = useState(false);
   const [adminData, setAdminData] = useState({});
@@ -26,19 +23,16 @@ const UserLayout = ({ children }) => {
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        dispatch(showLoading());
         const response = await getAbout();
-        dispatch(hideLoading());
         const adminData = response.data.data;
         setAdminData(adminData);
       } catch (error) {
-        dispatch(hideLoading());
         console.error("Error fetching About:", error);
         setAdminData({});
       }
     };
     fetchAbout();
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (logged) {
