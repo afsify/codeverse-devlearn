@@ -100,7 +100,7 @@ function Login() {
 
   return (
     <AuthCard>
-      <Link to={adminPath.signin}>
+      <Link to="/admin/signin">
         <h2 className="font-bold text-3xl text-dark-purple">Login</h2>
       </Link>
       <p className="text-sm mt-3 text-dark-purple">
