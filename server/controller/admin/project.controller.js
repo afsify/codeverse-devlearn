@@ -11,8 +11,8 @@ const listProject = async (req, res, next) => {
       data: projects,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -42,8 +42,8 @@ const insertProject = async (req, res, next) => {
       savedProject,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -70,8 +70,8 @@ const editProject = async (req, res, next) => {
       .status(200)
       .json({ success: true, message: "Project Updated", savedProject });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

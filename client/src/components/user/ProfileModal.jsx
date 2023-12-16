@@ -50,7 +50,7 @@ function ProfileModal({
     try {
       const formData = new FormData();
       formData.append("file", options.file);
-      formData.append("upload_preset", import.meta.env.VITE_CLOUD_PRESET);
+      formData.append("upload_preset", import.meta.env.VITE_PROFILE_PRESET);
       setUploading(true);
       const response = await cloudUpload(formData);
       const cloudinaryImageUrl = response.data.secure_url;

@@ -73,14 +73,14 @@ const sendOTP = async (req, res, next) => {
       res.status(200).send({ message: "Email Already Exists", success: false });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
 //! =============================================== Verify OTP ===============================================
 
-const verifyOTP = async (req, res) => {
+const verifyOTP = async (req, res, next) => {
   try {
     const inputOtp = parseInt(req.body.otp);
     if (inputOtp === otp) {
@@ -99,8 +99,8 @@ const verifyOTP = async (req, res) => {
       return res.status(400).send({ message: "Incorrect OTP", success: false });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -125,7 +125,7 @@ const login = async (req, res, next) => {
             { id: userData._id, role: "user" },
             process.env.JWT_SECRET,
             {
-              expiresIn: "5d",
+              expiresIn: "3d",
             }
           );
           res.status(200).send({
@@ -152,13 +152,13 @@ const login = async (req, res, next) => {
       const token = jwt.sign(
         { id: userData._id, role: "user" },
         process.env.JWT_SECRET,
-        { expiresIn: "5d" }
+        { expiresIn: "3d" }
       );
       res.status(200).send({ message: "Login Success", success: true, token });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -205,8 +205,8 @@ const forgotPassword = async (req, res, next) => {
         .send({ message: "Email Not Exist", success: false });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -225,8 +225,8 @@ const checkOTP = async (req, res, next) => {
       return res.status(400).send({ message: "Incorrect OTP", success: false });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -241,8 +241,8 @@ const resetPassword = async (req, res, next) => {
     await user.save();
     res.status(200).send({ message: "Password Updated", success: true });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -268,8 +268,8 @@ const getUser = async (req, res, next) => {
         .json({ auth: false, success: false, message: "Session Expired" });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -284,8 +284,8 @@ const listBanner = async (req, res, next) => {
       data: banner,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -300,8 +300,8 @@ const listProject = async (req, res, next) => {
       data: project,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -316,8 +316,8 @@ const listService = async (req, res, next) => {
       data: services,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -332,8 +332,8 @@ const listCourse = async (req, res, next) => {
       data: courses,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -359,8 +359,8 @@ const getCourse = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -380,8 +380,8 @@ const contactMessage = async (req, res, next) => {
       success: true,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -401,8 +401,8 @@ const getAbout = async (req, res, next) => {
       });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

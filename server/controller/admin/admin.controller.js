@@ -19,7 +19,7 @@ const signin = async (req, res, next) => {
         let token = jwt.sign(
           { id: adminData._id, role: "admin" },
           process.env.JWT_SECRET,
-          { expiresIn: "5d" }
+          { expiresIn: "3d" }
         );
         return res
           .status(200)
@@ -35,8 +35,8 @@ const signin = async (req, res, next) => {
         .send({ message: "Incorrect Email", success: false });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -64,8 +64,8 @@ const getAdmin = async (req, res, next) => {
         .send({ auth: false, success: false, message: "Admin Not Found" });
     }
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -81,9 +81,9 @@ const listDashboard = async (req, res, next) => {
     const courseCount = await courseModel.countDocuments();
     const contactCount = await contactModel.countDocuments();
     const projectCount = await projectModel.countDocuments();
+    const totalMembersCount = await userModel.countDocuments();
     const primeMembersCount = await userModel.countDocuments({ prime: true });
     const normalUsersCount = await userModel.countDocuments({ prime: false });
-    const totalMembersCount = await userModel.countDocuments();
     const courseProfit = orders.reduce((acc, order) => acc + order.price, 0);
     const primeProfit = primeMembersCount * 399;
     const totalProfit = courseProfit + primeProfit;
@@ -93,9 +93,9 @@ const listDashboard = async (req, res, next) => {
       courseCount,
       contactCount,
       projectCount,
+      totalMembersCount,
       primeMembersCount,
       normalUsersCount,
-      totalMembersCount,
       courseProfit,
       primeProfit,
       totalProfit,
@@ -106,8 +106,8 @@ const listDashboard = async (req, res, next) => {
       data: data,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -122,8 +122,8 @@ const listUser = async (req, res, next) => {
       data: users,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -148,8 +148,8 @@ const blockUser = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -174,8 +174,8 @@ const unblockUser = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -190,8 +190,8 @@ const listFeedback = async (req, res, next) => {
       data: feedbacks,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -233,8 +233,8 @@ const updateAbout = async (req, res, next) => {
       message: "Update Success",
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

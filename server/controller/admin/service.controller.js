@@ -11,8 +11,8 @@ const listService = async (req, res, next) => {
       data: services,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -40,8 +40,8 @@ const insertService = async (req, res, next) => {
       savedService,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -66,8 +66,8 @@ const editService = async (req, res, next) => {
       .status(200)
       .json({ success: true, message: "Service Updated", savedService });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -86,8 +86,8 @@ const serviceStatus = async (req, res, next) => {
     await service.save();
     res.status(200).json({ success: true, message: "Status Updated" });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -104,8 +104,8 @@ const deleteService = async (req, res, next) => {
     }
     res.status(200).json({ success: true, message: "Service Deleted" });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

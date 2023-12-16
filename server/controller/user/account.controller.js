@@ -22,9 +22,8 @@ const updateProfile = async (req, res, next) => {
       message: "Profile Updated",
     });
   } catch (error) {
-    console.error("Error updating profile:", error);
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -48,8 +47,8 @@ const findUser = async (req, res, next) => {
       data: users,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

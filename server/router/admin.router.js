@@ -1,11 +1,11 @@
 const express = require("express");
 const admin_router = express.Router();
+const { adminAuth } = require("../middleware/auth");
 const adminController = require("../controller/admin/admin.controller");
 const bannerController = require("../controller/admin/banner.controller");
 const courseController = require("../controller/admin/course.controller");
 const projectController = require("../controller/admin/project.controller");
 const serviceController = require("../controller/admin/service.controller");
-const { adminAuth } = require("../middleware/auth");
 
 //? ============================================= Authorization =============================================
 

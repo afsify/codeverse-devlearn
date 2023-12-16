@@ -11,8 +11,8 @@ const listBanner = async (req, res, next) => {
       data: banners,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -40,8 +40,8 @@ const insertBanner = async (req, res, next) => {
       savedBanner,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -66,8 +66,8 @@ const editBanner = async (req, res, next) => {
       .status(200)
       .json({ success: true, message: "Banner Updated", savedBanner });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -86,8 +86,8 @@ const bannerStatus = async (req, res, next) => {
     await banner.save();
     res.status(200).json({ success: true, message: "Status Updated" });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -104,8 +104,8 @@ const deleteBanner = async (req, res, next) => {
     }
     res.status(200).json({ success: true, message: "Banner Deleted" });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

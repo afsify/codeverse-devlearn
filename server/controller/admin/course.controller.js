@@ -11,8 +11,8 @@ const listCourse = async (req, res, next) => {
       data: courses,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -44,8 +44,8 @@ const insertCourse = async (req, res, next) => {
       savedCourse: savedCourse,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -74,8 +74,8 @@ const editCourse = async (req, res, next) => {
       .status(200)
       .json({ success: true, message: "Course Updated", savedCourse });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -94,8 +94,8 @@ const courseStatus = async (req, res, next) => {
     await course.save();
     res.status(200).json({ success: true, message: "Status Updated" });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -112,8 +112,8 @@ const deleteCourse = async (req, res, next) => {
     }
     res.status(200).json({ success: true, message: "Course Deleted" });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

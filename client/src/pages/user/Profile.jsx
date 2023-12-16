@@ -38,6 +38,7 @@ function Profile() {
         toast.error(response.data.message);
       }
     } catch (error) {
+      dispatch(hideLoading());
       console.log("Error Updating Profile:", error);
       toast.error("Something went wrong");
     }
@@ -47,7 +48,7 @@ function Profile() {
     try {
       const formData = new FormData();
       formData.append("file", options.file);
-      formData.append("upload_preset", import.meta.env.VITE_CLOUD_PRESET);
+      formData.append("upload_preset", import.meta.env.VITE_PROFILE_PRESET);
       setUploading(true);
       const response = await cloudUpload(formData);
       const cloudinaryImageUrl = response.data.secure_url;
@@ -63,6 +64,22 @@ function Profile() {
   const validateName = (rule) => {
     if (!name) {
       return Promise.reject("Please enter your name");
+    }
+    return Promise.resolve();
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const validatePhone = (rule) => {
+    if (!phone) {
+      return Promise.reject("Please enter your number");
+    }
+    return Promise.resolve();
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const validatePlace = (rule) => {
+    if (!place) {
+      return Promise.reject("Please enter your place");
     }
     return Promise.resolve();
   };
@@ -174,6 +191,9 @@ function Profile() {
                   pattern: /^\d{10}$/,
                   message: "Phone number must be 10 digits",
                 },
+                {
+                  validator: validatePhone,
+                },
               ]}
             >
               <motion.label
@@ -196,7 +216,10 @@ function Profile() {
               rules={[
                 {
                   pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
-                  message: "Please enter your place",
+                  message: "Place can't be empty",
+                },
+                {
+                  validator: validatePlace,
                 },
               ]}
             >

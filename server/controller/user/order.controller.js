@@ -1,6 +1,6 @@
 const userModel = require("../../model/user.model");
-const orderModel = require("../../model/order.model");
 const chatModel = require("../../model/chat.model");
+const orderModel = require("../../model/order.model");
 
 //! ============================================== Order Course ==============================================
 
@@ -16,16 +16,14 @@ const createOrder = async (req, res, next) => {
       price: course.price,
       videos: course.videos,
     });
-
     await order.save();
-
     res.status(200).send({
       message: "Payment Success",
       success: true,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -40,8 +38,8 @@ const listOrder = async (req, res, next) => {
       data: orders,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 
@@ -75,8 +73,8 @@ const primePayment = async (req, res, next) => {
       success: true,
     });
   } catch (error) {
-    next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });
+    next(error);
   }
 };
 

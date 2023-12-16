@@ -1,11 +1,11 @@
 const express = require("express");
 const user_router = express.Router();
-const userController = require("../controller/user/user.controller");
-const accountController = require("../controller/user/account.controller");
-const chatController = require("../controller/user/chat.controller");
-const messageController = require("../controller/user/message.controller");
-const orderController = require("../controller/user/order.controller");
 const { userAuth } = require("../middleware/auth");
+const userController = require("../controller/user/user.controller");
+const chatController = require("../controller/user/chat.controller");
+const orderController = require("../controller/user/order.controller");
+const accountController = require("../controller/user/account.controller");
+const messageController = require("../controller/user/message.controller");
 
 //? ============================================= Authorization =============================================
 
