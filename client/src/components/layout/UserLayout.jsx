@@ -206,7 +206,7 @@ const UserLayout = ({ children }) => {
           </div>
           <div className="text-center">
             <p className="font-sans text-center">
-              &copy;2023 Codeverse Devlearn
+              &copy;2023 Codeverse DevLearn
               <br />
               All rights reserved
             </p>
