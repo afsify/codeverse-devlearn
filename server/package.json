@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm i",
     "start": "nodemon index.js",
-    "server": "pm2 start index.js --name codeverse"
+    "server": "pm2 start index.js"
   },
   "keywords": [],
   "author": "",
