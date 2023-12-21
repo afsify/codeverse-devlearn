@@ -20,7 +20,16 @@ const listProject = async (req, res, next) => {
 
 const insertProject = async (req, res, next) => {
   try {
-    const { title, description, status, github, link, image } = req.body;
+    const {
+      title,
+      description,
+      status,
+      category,
+      github,
+      youtube,
+      live,
+      image,
+    } = req.body;
     const projectExists = await projectModel.findOne({ title: req.body.title });
     if (projectExists) {
       return res
@@ -31,8 +40,10 @@ const insertProject = async (req, res, next) => {
       title,
       description,
       status,
+      category,
       github,
-      link,
+      youtube,
+      live,
       image,
     });
     const savedProject = await newProject.save();
@@ -51,7 +62,16 @@ const insertProject = async (req, res, next) => {
 
 const editProject = async (req, res, next) => {
   try {
-    const { title, description, status, github, link, image } = req.body;
+    const {
+      title,
+      description,
+      status,
+      category,
+      github,
+      youtube,
+      live,
+      image,
+    } = req.body;
     const projectId = req.params.projectId;
     const project = await projectModel.findById(projectId);
     if (!project) {
@@ -62,8 +82,10 @@ const editProject = async (req, res, next) => {
     project.title = title;
     project.description = description;
     project.status = status;
+    project.category = category;
     project.github = github;
-    project.link = link;
+    project.youtube = youtube;
+    project.live = live;
     project.image = image;
     const savedProject = await project.save();
     res

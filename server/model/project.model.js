@@ -14,13 +14,18 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    github: {
+    category: {
       type: String,
       required: true,
     },
-    link: {
+    github: {
       type: String,
-      required: true,
+    },
+    youtube: {
+      type: String,
+    },
+    live: {
+      type: String,
     },
     image: {
       type: String,

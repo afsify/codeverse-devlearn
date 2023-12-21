@@ -1,11 +1,21 @@
-import { Button } from "antd";
 import { motion } from "framer-motion";
+import { Button, Progress } from "antd";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import imageLinks from "../../assets/images/imageLinks";
 import { getAbout } from "../../api/services/userService";
 import UserLayout from "../../components/layout/UserLayout";
 import { showLoading, hideLoading } from "../../utils/alertSlice";
+import {
+  MailOutlined,
+  PhoneOutlined,
+  GithubOutlined,
+  YoutubeOutlined,
+  WhatsAppOutlined,
+  LinkedinOutlined,
+  InstagramOutlined,
+  EnvironmentOutlined,
+} from "@ant-design/icons";
 
 function About() {
   const dispatch = useDispatch();
@@ -37,6 +47,19 @@ function About() {
     visible: {
       transition: {
         staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const fadeInUpTag = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const staggerTag = {
+    visible: {
+      transition: {
+        staggerChildren: 0.05,
       },
     },
   };
@@ -82,7 +105,7 @@ function About() {
         variants={stagger}
         className="overflow-x-auto bg-white rounded-lg shadow-sm shadow-black my-5 p-5"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
             <h2 className="text-3xl font-semibold mb-4">About</h2>
             <motion.div
@@ -137,59 +160,100 @@ function About() {
             </motion.div>
             <motion.div variants={fadeInUp}>
               <h1 className="text-2xl font-semibold mb-1">{adminData?.name}</h1>
-              <p className="text-gray-600 font-sans mb-1">{adminData?.email}</p>
-              <p className="text-gray-600 font-sans mb-1">{adminData?.phone}</p>
-              <p className="text-gray-600 font-sans mb-4">
+              <p className="text-gray-600 font-sans mb-1">
+                <span className="me-2">
+                  <MailOutlined />
+                </span>
+                {adminData?.email}
+              </p>
+              <p className="text-gray-600 font-sans mb-1">
+                <span className="me-2">
+                  <PhoneOutlined />
+                </span>
+                {adminData?.phone}
+              </p>
+              <p className="text-gray-600 font-sans max-w-[250px] mb-4">
+                <span className="me-2">
+                  <EnvironmentOutlined />
+                </span>
                 {adminData?.address}
               </p>
             </motion.div>
             <h2 className="text-lg font-semibold mb-2">Contact</h2>
-            <motion.ul variants={fadeInUp} className="list-disc ml-6 font-sans">
-              <motion.li>
-                GitHub:{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-700 hover:underline font-semibold"
-                  href={adminData.contact?.github}
-                >
-                  {getUserId(adminData.contact?.github, "/")}
-                </a>
-              </motion.li>
-              <motion.li>
-                LinkedIn:{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-700 hover:underline font-semibold"
-                  href={adminData.contact?.linkedIn}
-                >
+            <motion.div
+              variants={staggerTag}
+              className="flex flex-wrap justify-center md:justify-start items-center gap-5 px-5 min-h-[80px]"
+            >
+              <motion.a
+                variants={fadeInUpTag}
+                href={
+                  adminData.contact?.linkedIn ||
+                  "https://linkedin.com/in/example"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group hover:scale-125 duration-300 hover:text-[#0366c3]"
+              >
+                <LinkedinOutlined style={{ fontSize: "40px" }} />
+                <p className="hidden text-[9px] text-center group-hover:grid font-semibold font-sans">
                   {getUserId(adminData.contact?.linkedIn, "/")}
-                </a>
-              </motion.li>
-              <motion.li>
-                Instagram:{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-700 hover:underline font-semibold"
-                  href={adminData.contact?.instagram}
-                >
-                  {getUserId(adminData.contact?.instagram, "/")}
-                </a>
-              </motion.li>
-              <motion.li>
-                WhatsApp:{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-700 hover:underline font-semibold"
-                  href={adminData.contact?.whatsapp}
-                >
+                </p>
+              </motion.a>
+              <motion.a
+                variants={fadeInUpTag}
+                href={adminData.contact?.github || "https://github.com/example"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group hover:scale-125 duration-300"
+              >
+                <GithubOutlined style={{ fontSize: "40px" }} />
+                <p className="hidden text-[9px] text-center group-hover:grid font-semibold font-sans">
+                  {getUserId(adminData.contact?.github, "/")}
+                </p>
+              </motion.a>
+              <motion.a
+                variants={fadeInUpTag}
+                href={
+                  adminData.contact?.youtube ||
+                  "https://www.youtube.com/@example"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group hover:scale-125 duration-300 hover:text-[#ff0000]"
+              >
+                <YoutubeOutlined style={{ fontSize: "40px" }} />
+                <p className="hidden text-[9px] text-center group-hover:grid font-semibold font-sans">
+                  {getUserId(adminData.contact?.youtube, "/")}
+                </p>
+              </motion.a>
+              <motion.a
+                variants={fadeInUpTag}
+                href={adminData.contact?.whatsapp || "https://wa.me/1234567890"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group hover:scale-125 duration-300 hover:text-[#119e06]"
+              >
+                <WhatsAppOutlined style={{ fontSize: "40px" }} />
+                <a className="hidden text-[5px] text-center group-hover:grid font-semibold font-sans">
                   {getUserId(adminData.contact?.whatsapp, "/")}
                 </a>
-              </motion.li>
-            </motion.ul>
+              </motion.a>
+              <motion.a
+                variants={fadeInUpTag}
+                href={
+                  adminData.contact?.instagram ||
+                  "https://instagram.com/example"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group hover:scale-125 duration-300 hover:text-[#833ab4]"
+              >
+                <InstagramOutlined style={{ fontSize: "40px" }} />
+                <p className="hidden text-[9px] text-center group-hover:grid font-semibold font-sans">
+                  {getUserId(adminData.contact?.instagram, "/")}
+                </p>
+              </motion.a>
+            </motion.div>
           </div>
           <motion.div variants={fadeInUp} className="md:mt-10">
             <h2 className="text-lg font-semibold mb-2">Education</h2>
@@ -202,13 +266,62 @@ function About() {
               ))}
             </motion.ul>
             <h2 className="text-lg font-semibold mt-5 mb-2">Skills</h2>
-            <motion.ul variants={fadeInUp} className="list-disc ml-6 font-sans">
-              {adminData.skill?.map((skill, index) => (
-                <motion.li key={index} className="mb-2 last:mb-0">
-                  {skill.name} - {skill.proficiency} level
-                </motion.li>
-              ))}
-            </motion.ul>
+            <motion.div
+              variants={stagger}
+              className="flex md:justify-between flex-wrap px-2"
+            >
+              <motion.ul variants={fadeInUp} className="font-sans space-y-4">
+                {adminData.skill
+                  ?.slice(0, Math.ceil(adminData.skill.length / 2))
+                  .map((skill, index) => (
+                    <motion.li
+                      key={index}
+                      variants={fadeInUp}
+                      className="mb-4 last:mb-0"
+                    >
+                      <div className="flex items-center">
+                        <div className="min-w-[100px]">
+                          <p className="font-semibold">{skill.name}</p>
+                        </div>
+                        <div className="w-56">
+                          <Progress
+                            percent={skill.proficiency}
+                            status="active"
+                            width={56}
+                          />
+                        </div>
+                      </div>
+                    </motion.li>
+                  ))}
+              </motion.ul>
+              <motion.ul
+                variants={fadeInUp}
+                className="font-sans mt-4 md:mt-0 space-y-4"
+              >
+                {adminData.skill
+                  ?.slice(Math.ceil(adminData.skill.length / 2))
+                  .map((skill, index) => (
+                    <motion.li
+                      key={index}
+                      variants={fadeInUp}
+                      className="mb-4 last:mb-0"
+                    >
+                      <div className="flex items-center">
+                        <div className="min-w-[100px]">
+                          <p className="font-semibold">{skill.name}</p>
+                        </div>
+                        <div className="w-56">
+                          <Progress
+                            percent={skill.proficiency}
+                            status="active"
+                            width={56}
+                          />
+                        </div>
+                      </div>
+                    </motion.li>
+                  ))}
+              </motion.ul>
+            </motion.div>
           </motion.div>
         </div>
       </motion.div>

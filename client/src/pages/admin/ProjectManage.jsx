@@ -68,16 +68,20 @@ function ProjectManage() {
     image,
     title,
     description,
+    category,
     github,
-    link
+    youtube,
+    live
   ) => {
     const projectToEdit = {
       _id: projectId,
       image: image,
       title: title,
       description: description,
+      category: category,
       github: github,
-      link: link,
+      youtube: youtube,
+      live: live,
     };
     setEditData(projectToEdit);
     showModal();
@@ -189,6 +193,9 @@ function ProjectManage() {
                 Description
               </th>
               <th className="text-center border border-gray-300 py-2">
+                Category
+              </th>
+              <th className="text-center border border-gray-300 py-2">
                 Status
               </th>
               <th className="text-center border border-gray-300 py-2">
@@ -231,6 +238,9 @@ function ProjectManage() {
                   <td className="text-center border border-gray-300 py-2 max-w-md">
                     {project.description}
                   </td>
+                  <td className="text-center border border-gray-300 py-2 max-w-md">
+                    {project.category}
+                  </td>
                   <td className="text-center border border-gray-300 py-2">
                     <Switch
                       className="bg-light-purple"
@@ -250,8 +260,10 @@ function ProjectManage() {
                           project.image,
                           project.title,
                           project.description,
+                          project.category,
                           project.github,
-                          project.link
+                          project.youtube,
+                          project.live
                         )
                       }
                     />

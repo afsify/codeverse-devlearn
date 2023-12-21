@@ -13,8 +13,10 @@ function ProjectForm({ visible, onCreate, onCancel, editData }) {
     image: "",
     title: "",
     description: "",
+    category: "",
     github: "",
-    link: "",
+    youtube: "",
+    live: "",
   });
 
   const customUploadButton = (
@@ -76,8 +78,10 @@ function ProjectForm({ visible, onCreate, onCancel, editData }) {
         ...formData,
         title: values.title,
         description: values.description,
+        category: values.category,
         github: values.github,
-        link: values.link,
+        youtube: values.youtube,
+        live: values.live,
       };
       form.resetFields();
       onCreate(updatedFormData);
@@ -91,6 +95,7 @@ function ProjectForm({ visible, onCreate, onCancel, editData }) {
       form.setFieldsValue(editData);
       setImageUrl(editData.image || "");
       setFormData(editData);
+      console.log(editData);
     }
   }, [editData, form]);
 
@@ -126,17 +131,19 @@ function ProjectForm({ visible, onCreate, onCancel, editData }) {
           <Input.TextArea />
         </Form.Item>
         <Form.Item
-          name="github"
-          label="GitHub"
-          rules={[{ required: true, message: "Please enter a link" }]}
+          name="category"
+          label="Category"
+          rules={[{ required: true, message: "Please enter a category" }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          name="link"
-          label="Link"
-          rules={[{ required: true, message: "Please enter a link" }]}
-        >
+        <Form.Item name="github" label="GitHub Link">
+          <Input />
+        </Form.Item>
+        <Form.Item name="youtube" label="YouTube Link">
+          <Input />
+        </Form.Item>
+        <Form.Item name="live" label="Live Link">
           <Input />
         </Form.Item>
       </Form>

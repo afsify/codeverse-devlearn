@@ -278,6 +278,18 @@ function Settings() {
                   </Form.Item>
                   <Form.Item
                     label={
+                      <span className="font-medium text-xs ml-5">YouTube</span>
+                    }
+                    name={["contact", "youtube"]}
+                    className="mb-2"
+                  >
+                    <Input
+                      placeholder="YouTube"
+                      className="p-2 placeholder-gray-300"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label={
                       <span className="font-medium text-xs ml-5">
                         Instagram
                       </span>
@@ -419,7 +431,7 @@ function Settings() {
                   )}
                 </Form.List>
                 <Form.Item
-                  label={<span className="font-semibold">Skill</span>}
+                  label={<span className="font-semibold">Skills</span>}
                   name="skill"
                 >
                   <Form.List name="skill">
@@ -468,14 +480,16 @@ function Settings() {
                                 >
                                   <Select
                                     size="large"
-                                    defaultValue="Intermediate"
+                                    defaultValue={30}
                                   >
-                                    <Option value="Beginner">Beginner</Option>
-                                    <Option value="Intermediate">
-                                      Intermediate
-                                    </Option>
-                                    <Option value="Advanced">Advanced</Option>
-                                    <Option value="Expert">Expert</Option>
+                                    {[...Array(20)].map((_, index) => (
+                                      <Option
+                                        key={index + 1}
+                                        value={(index + 1) * 5}
+                                      >
+                                        {(index + 1) * 5}%
+                                      </Option>
+                                    ))}
                                   </Select>
                                 </Form.Item>
                                 <div className="flex justify-center mt-4">

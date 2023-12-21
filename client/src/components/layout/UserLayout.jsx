@@ -1,38 +1,17 @@
 import PropTypes from "prop-types";
-import { motion } from "framer-motion";
+import Footer from "../user/Footer";
 import Dropdown from "../user/Dropdown";
 import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { userPath } from "../../routes/routeConfig";
-import { getAbout, getUser } from "../../api/services/userService";
+import { getUser } from "../../api/services/userService";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  GithubOutlined,
-  LinkedinOutlined,
-  InstagramOutlined,
-  WhatsAppOutlined,
-} from "@ant-design/icons";
 
 const UserLayout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [nav, setNav] = useState(false);
-  const [adminData, setAdminData] = useState({});
   const logged = localStorage.getItem("userToken") !== null;
-
-  useEffect(() => {
-    const fetchAbout = async () => {
-      try {
-        const response = await getAbout();
-        const adminData = response.data.data;
-        setAdminData(adminData);
-      } catch (error) {
-        console.error("Error fetching About:", error);
-        setAdminData({});
-      }
-    };
-    fetchAbout();
-  }, []);
 
   useEffect(() => {
     if (logged) {
@@ -79,18 +58,15 @@ const UserLayout = ({ children }) => {
     },
   ];
 
-  const footerVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <div className="min-h-screen">
       <header className="py-4 px-4 box-border flex justify-center">
         <nav className="flex justify-center w-[99%] z-40 rounded-xl h-20 px-5 text-white bg-dark-purple shadow-black shadow-md fixed">
           <div className="flex w-full container justify-between items-center">
-            <div>
-              <h1 className="text-5xl font-signature ml-2">Codeverse</h1>
+            <div className="h-full">
+              <Link to={userPath.home}>
+                <h1 className="text-5xl font-signature ml-2 mt-5">Codeverse</h1>
+              </Link>
             </div>
             <div className="items-center hidden md:flex justify-center gap-3">
               <ul className="flex gap-1">
@@ -159,74 +135,7 @@ const UserLayout = ({ children }) => {
       <main className="container mx-auto mt-20 px-2 mb-5 min-h-[85vh]">
         {children}
       </main>
-      <motion.footer
-        initial="hidden"
-        animate="visible"
-        variants={footerVariants}
-        className="bg-medium-dark text-white text-center p-8"
-      >
-        <div className="container mx-auto flex flex-col md:flex-row items-center gap-y-3 md:justify-between">
-          <div className="flex flex-wrap justify-center md:justify-start gap-4">
-            <a
-              href={adminData.contact?.github || "https://github.com/example"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 duration-300 hover:text-blue-500"
-            >
-              <GithubOutlined style={{ fontSize: "30px" }} />
-            </a>
-            <a
-              href={
-                adminData.contact?.linkedIn || "https://linkedin.com/in/example"
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 duration-300 hover:text-blue-500"
-            >
-              <LinkedinOutlined style={{ fontSize: "30px" }} />
-            </a>
-            <a
-              href={
-                adminData.contact?.instagram || "https://instagram.com/example"
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 duration-300 hover:text-blue-500"
-            >
-              <InstagramOutlined style={{ fontSize: "30px" }} />
-            </a>
-            <a
-              href={adminData.contact?.whatsapp || "https://wa.me/1234567890"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:scale-110 duration-300 hover:text-blue-500"
-            >
-              <WhatsAppOutlined style={{ fontSize: "30px" }} />
-            </a>
-          </div>
-          <div className="text-center">
-            <p className="font-sans text-center">
-              &copy;2023 Codeverse DevLearn
-              <br />
-              All rights reserved
-            </p>
-          </div>
-          <div className="flex md:flex-col gap-x-2 flex-row items-center">
-            <Link
-              to={userPath.about}
-              className="hover:underline duration-300 hover:text-blue-500"
-            >
-              About
-            </Link>
-            <Link
-              to={userPath.contact}
-              className="hover:underline duration-300 hover:text-blue-500"
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </motion.footer>
+      <Footer />
     </div>
   );
 };

@@ -20,6 +20,7 @@ const adminSchema = new mongoose.Schema({
   contact: {
     linkedIn: String,
     github: String,
+    youtube: String,
     instagram: String,
     whatsapp: String,
   },
@@ -38,9 +39,9 @@ const adminSchema = new mongoose.Schema({
         required: true,
       },
       proficiency: {
-        type: String,
-        enum: ["Beginner", "Intermediate", "Advanced", "Expert"],
-        default: "Intermediate",
+        type: Number,
+        min: 0,
+        max: 100,
       },
     },
   ],
