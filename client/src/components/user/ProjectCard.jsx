@@ -83,9 +83,23 @@ function ProjectCard() {
                 key={index}
                 className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 hover:shadow-md transition duration-300 ease-in-out"
               >
-                <Skeleton type="image" count={1} width={100} height={40} />
+                <Skeleton type="image" count={1} width={100} height={48} />
                 <div className="px-6 py-4">
-                  <Skeleton type="text" height={5} count={5} />
+                  <div className="w-1/2 mb-3">
+                    <Skeleton type="text" count={1} height={5} />
+                  </div>
+                  <div className="mb-4">
+                    <Skeleton type="text" count={1} height={3} />
+                    <Skeleton type="text" count={1} height={3} />
+                    <Skeleton type="text" count={1} height={3} />
+                    <Skeleton type="text" count={1} height={3} />
+                    <Skeleton type="text" count={1} height={3} />
+                  </div>
+                  <div className="flex justify-center gap-x-5">
+                    <Skeleton type="circle" count={1} />
+                    <Skeleton type="circle" count={1} />
+                    <Skeleton type="circle" count={1} />
+                  </div>
                 </div>
               </div>
             ))
