@@ -31,9 +31,10 @@ function ProjectCard() {
         setProjectsData([]);
       }
     };
-
-    fetchData();
-  }, [dispatch]);
+    if (isLoading) {
+      fetchData();
+    }
+  }, [dispatch, isLoading]);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -86,19 +87,19 @@ function ProjectCard() {
                 <Skeleton type="image" count={1} width={100} height={48} />
                 <div className="px-6 py-4">
                   <div className="w-1/2 mb-3">
-                    <Skeleton type="text" count={1} height={5} />
+                    <Skeleton type="text" count={1} />
                   </div>
                   <div className="mb-4">
-                    <Skeleton type="text" count={1} height={3} />
-                    <Skeleton type="text" count={1} height={3} />
-                    <Skeleton type="text" count={1} height={3} />
-                    <Skeleton type="text" count={1} height={3} />
-                    <Skeleton type="text" count={1} height={3} />
+                    <Skeleton type="text" count={1} />
+                    <Skeleton type="text" count={1} />
+                    <Skeleton type="text" count={1} />
+                    <Skeleton type="text" count={1} />
+                    <Skeleton type="text" count={1} />
                   </div>
                   <div className="flex justify-center gap-x-5">
-                    <Skeleton type="circle" count={1} />
-                    <Skeleton type="circle" count={1} />
-                    <Skeleton type="circle" count={1} />
+                    <Skeleton type="circle" count={1} width={7} height={7} />
+                    <Skeleton type="circle" count={1} width={7} height={7} />
+                    <Skeleton type="circle" count={1} width={7} height={7} />
                   </div>
                 </div>
               </div>
