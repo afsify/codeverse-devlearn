@@ -1,4 +1,4 @@
-import Skeleton from "./Skelton";
+import Skeleton from "./Skeleton";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -85,7 +85,7 @@ function ProjectCard() {
               >
                 <Skeleton type="image" count={1} width={100} height={40} />
                 <div className="px-6 py-4">
-                  <Skeleton type="text" count={5} />
+                  <Skeleton type="text" height={5} count={5} />
                 </div>
               </div>
             ))
@@ -97,7 +97,7 @@ function ProjectCard() {
                 animate="visible"
                 exit="hidden"
                 transition={{ duration: 0.05, delay: index * 0.05 }}
-                className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-110 hover:shadow-black hover:shadow-lg transition duration-300 ease-in-out"
+                className="bg-white shadow-md rounded-lg overflow-hidden transform hover:shadow-black hover:shadow-md transition duration-300 ease-in-out"
               >
                 <img
                   src={project.image}

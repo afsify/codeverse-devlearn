@@ -92,10 +92,10 @@ function Service() {
               animate="visible"
               exit="hidden"
               transition={{ duration: 0.05, delay: index * 0.05 }}
-              className="col-span-1 transform hover:scale-150 hover:shadow-black hover:shadow-lg rounded-lg transition duration-300 ease-in-out"
+              className="col-span-1 transform rounded-lg transition duration-300 ease-in-out"
             >
               <motion.div>
-                <div className="bg-white shadow-md rounded-lg cursor-pointer">
+                <div className="bg-white shadow-md hover:scale-105 hover:shadow-xl duration-300 overflow-hidden rounded-lg cursor-pointer">
                   <img
                     alt={service.title}
                     src={service.image}

@@ -160,10 +160,10 @@ function Course() {
             animate="visible"
             exit="hidden"
             transition={{ duration: 0.05, delay: index * 0.05 }}
-            className="col-span-1 transform hover:scale-110 hover:shadow-black hover:shadow-lg rounded-lg transition duration-300"
+            className="col-span-1 transform rounded-lg transition duration-300"
           >
             <motion.div>
-              <div className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer">
+              <div className="bg-white shadow-md rounded-lg hover:scale-105 hover:shadow-xl duration-300 overflow-hidden cursor-pointer">
                 <img
                   onClick={() =>
                     navigate(`${userPath.courseDetail}`, { state: { course } })

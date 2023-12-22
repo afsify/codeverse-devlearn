@@ -6,13 +6,13 @@ const Skeleton = ({ type, count, width, height }) => {
   const getClassName = () => {
     switch (type) {
       case "text":
-        return `h-${height} bg-gray-300 animate-pulse`;
+        return ` h-${height} bg-gray-300 animate-pulse `;
       case "circle":
-        return `w-${width} h-${height} rounded-full bg-gray-300 animate-pulse`;
+        return ` w-${width} h-${height} rounded-full bg-gray-300 animate-pulse `;
       case "image":
-        return `flex items-center rounded-lg justify-center w-${width} h-${height} bg-gray-300 animate-pulse`;
+        return ` flex items-center rounded-lg justify-center w-${width} h-${height} bg-gray-300 animate-pulse `;
       default:
-        return `h-${height} bg-gray-300 animate-pulse`;
+        return ` h-${height} bg-gray-300 animate-pulse `;
     }
   };
 
