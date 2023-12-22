@@ -119,9 +119,7 @@ function Course() {
 
   return (
     <UserLayout>
-      <div
-        className="px-4 pb-3 flex items-center justify-between"
-      >
+      <div className="px-4 pb-3 flex items-center justify-between">
         <h2 className="text-3xl font-semibold">Courses</h2>
         <div className="flex items-center gap-x-2">
           {userOrders.length > 0 && (
@@ -153,9 +151,7 @@ function Course() {
           />
         </div>
       </div>
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-4"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-4">
         {currentCourses.map((course, index) => (
           <motion.div
             key={course._id}
@@ -164,7 +160,7 @@ function Course() {
             animate="visible"
             exit="hidden"
             transition={{ duration: 0.05, delay: index * 0.05 }}
-            className="col-span-1 transform hover:scale-105 hover:shadow-xl transition duration-300"
+            className="col-span-1 transform hover:scale-110 hover:shadow-black hover:shadow-lg rounded-lg transition duration-300"
           >
             <motion.div>
               <div className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer">
