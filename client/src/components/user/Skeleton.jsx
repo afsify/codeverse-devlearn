@@ -8,7 +8,7 @@ const Skeleton = ({ type, count, width, height }) => {
       case "text":
         return `h-4 bg-gray-300 animate-pulse`;
       case "circle":
-        return `flex items-center justify-center w-${width} h-${height} rounded-full bg-gray-300 animate-pulse`;
+        return `flex items-center justify-center w-7 h-7 rounded-full bg-gray-300 animate-pulse`;
       case "image":
         return `flex items-center rounded-lg justify-center w-${width} h-${height} bg-gray-300 animate-pulse`;
       default:

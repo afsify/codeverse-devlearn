@@ -29,12 +29,11 @@ function ProjectCard() {
         dispatch(hideLoading());
         console.error("Error fetching data:", error);
         setProjectsData([]);
+        fetchData();
       }
     };
-    if (isLoading) {
-      fetchData();
-    }
-  }, [dispatch, isLoading]);
+    fetchData();
+  }, [dispatch]);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -97,9 +96,9 @@ function ProjectCard() {
                     <Skeleton type="text" count={1} />
                   </div>
                   <div className="flex justify-center gap-x-5">
-                    <Skeleton type="circle" count={1} width={7} height={7} />
-                    <Skeleton type="circle" count={1} width={7} height={7} />
-                    <Skeleton type="circle" count={1} width={7} height={7} />
+                    <Skeleton type="circle" count={1} />
+                    <Skeleton type="circle" count={1} />
+                    <Skeleton type="circle" count={1} />
                   </div>
                 </div>
               </div>

@@ -25,6 +25,7 @@ function Banner() {
         dispatch(hideLoading());
         console.error("Error fetching banners:", error);
         setBanners([]);
+        fetchBanners();
       }
     };
     fetchBanners();
