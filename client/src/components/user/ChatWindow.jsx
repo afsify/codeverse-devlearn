@@ -7,6 +7,7 @@ import AccountModal from "./AccountModal";
 import EmojiInput from "react-input-emoji";
 import { format as timeAgo } from "timeago.js";
 import ScrollableFeed from "react-scrollable-feed";
+import { cloudUpload } from "../../api/cloudinary";
 import { useState, useEffect, useRef } from "react";
 import imageLinks from "../../assets/images/imageLinks";
 import { Spin, Tooltip, Button, Skeleton, Upload, Modal } from "antd";
@@ -16,7 +17,6 @@ import {
   CameraOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { cloudUpload } from "../../api/cloudinary";
 var socket, selectedChatCompare;
 
 function ChatWindow({
@@ -29,7 +29,6 @@ function ChatWindow({
   toggleAccountModal,
   isAccountModalVisible,
 }) {
-  const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
   const [typing, setTyping] = useState(false);
   const [messages, setMessage] = useState([]);
@@ -183,7 +182,6 @@ function ChatWindow({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    inputRef.current?.focus();
   }, [messages]);
 
   const isSameSender = (messages, m, i, userId) => {
@@ -374,7 +372,6 @@ function ChatWindow({
         <div className="flex sticky bottom-0 z-30 p-2 gap-x-2">
           <div className="flex-grow relative">
             <EmojiInput
-              ref={inputRef}
               placeholder="Enter a message..."
               value={newMessage}
               onChange={(text) => {
