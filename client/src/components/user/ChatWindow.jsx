@@ -9,6 +9,7 @@ import { format as timeAgo } from "timeago.js";
 import ScrollableFeed from "react-scrollable-feed";
 import { cloudUpload } from "../../api/cloudinary";
 import { useState, useEffect, useRef } from "react";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
 import { Spin, Tooltip, Button, Skeleton, Upload, Modal } from "antd";
 import { listMessage, sendMessage } from "../../api/services/userService";
@@ -261,8 +262,26 @@ function ChatWindow({
             <h2 className="text-xl text-gray-300 ml-3 capitalize font-semibold">
               {selectedChat.isGroupChat
                 ? selectedChat.chatName
-                : selectedChat.users.find((user) => user._id !== userData._id)
-                    ?.name || "Unknown User"}
+                : (selectedChat.users.find((user) => user._id !== userData._id)
+                    ?.name && (
+                    <span>
+                      {
+                        selectedChat.users.find(
+                          (user) => user._id !== userData._id
+                        )?.name
+                      }
+                      {selectedChat.users.find(
+                        (user) => user._id !== userData._id
+                      )?.prime && (
+                        <VerifiedIcon
+                          className="ml-1 mb-1"
+                          color="primary"
+                          sx={{ fontSize: 20 }}
+                        />
+                      )}
+                    </span>
+                  )) ||
+                  "Unknown User"}
             </h2>
           </div>
           <div onClick={() => setSelectedChat()} className="flex">

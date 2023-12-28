@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import { Skeleton, Menu, Dropdown } from "antd";
+import { MoreOutlined } from "@ant-design/icons";
 import imageLinks from "../../assets/images/imageLinks";
-import { MoreOutlined, StarFilled } from "@ant-design/icons";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 function ChatList({
   chatData,
@@ -90,7 +91,11 @@ function ChatList({
                       <span>
                         {receiver[0].name}
                         {receiver[0].prime && (
-                          <StarFilled className="ml-1" style={{ fontSize: "14px" , color: "#081A51" }} />
+                          <VerifiedIcon
+                          className="ml-1 mb-1"
+                          color="primary"
+                          sx={{ fontSize: 16 }}
+                        />
                         )}
                       </span>
                     )}

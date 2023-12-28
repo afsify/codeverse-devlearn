@@ -3,7 +3,9 @@ import { useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { userPath } from "../../routes/routeConfig";
 import { userActions } from "../../utils/userSlice";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
+import { listOrder } from "../../api/services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   UserOutlined,
@@ -11,7 +13,6 @@ import {
   PlaySquareOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { listOrder } from "../../api/services/userService";
 
 function Dropdown() {
   const menuRef = useRef();
@@ -82,7 +83,16 @@ function Dropdown() {
           ref={menuRef}
         >
           <h3 className="text-center text-lg uppercase font-semibold text-gray-700">
-            {userData.name}
+            <span>
+              {userData.name}
+              {userData.prime && (
+                <VerifiedIcon
+                  className="ml-1 mb-1"
+                  color="primary"
+                  sx={{ fontSize: 16 }}
+                />
+              )}
+            </span>
             <br />
             <span className="text-sm font-normal normal-case font-sans text-gray-500">
               {userData.email}

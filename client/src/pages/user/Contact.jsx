@@ -1,19 +1,19 @@
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { Button, Form, Input } from "antd";
 import StripeCheckout from "react-stripe-checkout";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import UserLayout from "../../components/layout/UserLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 import { contactMessage, primePayment } from "../../api/services/userService";
 import {
-  StarFilled,
   CrownFilled,
   PhoneFilled,
   SendOutlined,
   WechatFilled,
   VideoCameraFilled,
 } from "@ant-design/icons";
-import { motion } from "framer-motion";
 
 function Contact() {
   const dispatch = useDispatch();
@@ -180,9 +180,10 @@ function Contact() {
                 <span className="font-semibold">Tech support group</span>
               </div>
               <div className="flex items-center bg-gray-100 hover:bg-gray-200 p-3 rounded-md transition duration-300">
-                <StarFilled
-                  style={{ color: "#081A51" }}
-                  className="mr-2 font-semibold"
+                <VerifiedIcon
+                  className="mr-2"
+                  color="primary"
+                  sx={{ fontSize: 18 }}
                 />
                 <span className="font-semibold">Member Recognition</span>
               </div>
