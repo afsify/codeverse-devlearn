@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { userActions } from "../../utils/userSlice";
 import { userPath } from "../../routes/routeConfig";
 import { useState, useRef, useEffect } from "react";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
 import { LogoutOutlined, UserOutlined, HomeOutlined } from "@ant-design/icons";
 
@@ -50,7 +51,16 @@ function ProfileMenu({ userData, logged }) {
           ref={menuRef}
         >
           <h3 className="text-center text-lg uppercase font-semibold text-gray-700">
-            {userData.name}
+            <span>
+              {userData.name}
+              {userData.prime && (
+                <VerifiedIcon
+                  className="ml-1 mb-1"
+                  color="primary"
+                  sx={{ fontSize: 16 }}
+                />
+              )}
+            </span>
             <br />
             <span className="text-sm font-normal normal-case font-sans text-gray-500">
               {userData.email}
