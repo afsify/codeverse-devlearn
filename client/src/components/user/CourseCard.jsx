@@ -31,6 +31,7 @@ function CourseCard() {
       } catch (error) {
         console.error("Error fetching courses:", error);
         setCourses([]);
+        fetchCourses();
       }
     };
     fetchCourses();
@@ -98,7 +99,7 @@ function CourseCard() {
                 key={index}
                 className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 hover:shadow-md transition duration-300 ease-in-out"
               >
-                <Skeleton type="image" count={1} width={100} height={48} />
+                <Skeleton type="image" count={1} width={100} height={40} />
                 <div className="px-6 py-4">
                   <div className="w-1/2 mb-3">
                     <Skeleton type="text" count={1} />
