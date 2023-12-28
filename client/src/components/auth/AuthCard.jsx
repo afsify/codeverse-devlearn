@@ -8,7 +8,7 @@ function AuthCard({ children }) {
       <div className="flex rounded-2xl shadow-2xl max-w-4xl bg-white p-5 m-1 items-center">
         <div className="md:w-1/2 px-8 md:px-14">{children}</div>
         <div className="md:flex hidden w-1/2">
-          {imageLinks.auth ? (
+          {imageLinks?.auth ? (
             <img className="rounded-2xl" src={imageLinks.auth} alt="Auth" />
           ) : (
             <div className="flex items-center rounded-2xl justify-center bg-gray-300 animate-pulse w-[482px] h-[557px]">

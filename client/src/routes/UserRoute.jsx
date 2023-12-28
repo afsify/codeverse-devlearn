@@ -1,24 +1,27 @@
-import { Routes, Route } from "react-router-dom";
+import { Spin } from "antd";
+import { lazy, Suspense } from "react";
 import { userPath } from "./routeConfig";
-import Home from "../pages/user/Home";
-import Login from "../pages/user/Login";
-import About from "../pages/user/About";
-import Course from "../pages/user/Course";
-import Service from "../pages/user/Service";
-import Contact from "../pages/user/Contact";
-import Library from "../pages/user/Library";
-import Profile from "../pages/user/Profile";
-import Register from "../pages/user/Register";
-import Messages from "../pages/user/Messages";
-import ResetOTP from "../pages/user/ResetOTP";
 import NotFound from "../pages/error/NotFound";
-import RegisterOTP from "../pages/user/RegisterOTP";
+import { Routes, Route } from "react-router-dom";
 import ServerError from "../pages/error/ServerError";
-import CourseDetail from "../pages/user/CourseDetail";
-import ResetPassword from "../pages/user/ResetPassword";
 import PublicRoute from "../components/auth/PublicRoute";
-import ForgotPassword from "../pages/user/ForgotPassword";
 import PrivateRoute from "../components/auth/PrivateRoute";
+
+const Home = lazy(() => import("../pages/user/Home"));
+const Login = lazy(() => import("../pages/user/Login"));
+const About = lazy(() => import("../pages/user/About"));
+const Course = lazy(() => import("../pages/user/Course"));
+const Service = lazy(() => import("../pages/user/Service"));
+const Contact = lazy(() => import("../pages/user/Contact"));
+const Library = lazy(() => import("../pages/user/Library"));
+const Profile = lazy(() => import("../pages/user/Profile"));
+const Register = lazy(() => import("../pages/user/Register"));
+const Messages = lazy(() => import("../pages/user/Messages"));
+const ResetOTP = lazy(() => import("../pages/user/ResetOTP"));
+const RegisterOTP = lazy(() => import("../pages/user/RegisterOTP"));
+const ResetPassword = lazy(() => import("../pages/user/ResetPassword"));
+const ForgotPassword = lazy(() => import("../pages/user/ForgotPassword"));
+const CourseDetail = lazy(() => import("../pages/user/CourseDetail"));
 
 function UserRoute() {
   return (
@@ -48,4 +51,17 @@ function UserRoute() {
   );
 }
 
-export default UserRoute;
+export default function UserRouteWithSuspense() {
+  return (
+    <Suspense
+      fallback={
+        <Spin
+          size="large"
+          className="flex h-screen justify-center items-center"
+        />
+      }
+    >
+      <UserRoute />
+    </Suspense>
+  );
+}

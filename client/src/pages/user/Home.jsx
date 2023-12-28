@@ -1,11 +1,9 @@
-import { Spin } from "antd";
 import { motion } from "framer-motion";
-import { lazy, Suspense } from "react";
 import Banner from "../../components/user/Banner";
 import LazyLoader from "../../components/user/LazyLoader";
+import CourseCard from "../../components/user/CourseCard";
 import UserLayout from "../../components/layout/UserLayout";
 import ProjectCard from "../../components/user/ProjectCard";
-const LazyCourseCard = lazy(() => import("../../components/user/CourseCard"));
 
 function Home() {
   const fadeIn = {
@@ -22,16 +20,7 @@ function Home() {
         transition={{ duration: 0.5 }}
       >
         <Banner />
-        <Suspense
-          fallback={
-            <Spin
-              size="large"
-              className="flex h-screen justify-center items-center"
-            />
-          }
-        >
-          <LazyCourseCard />
-        </Suspense>
+        <CourseCard />
         <LazyLoader>
           <ProjectCard />
         </LazyLoader>
