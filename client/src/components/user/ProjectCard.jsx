@@ -1,9 +1,7 @@
 import Skeleton from "./Skeleton";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { listProject } from "../../api/services/userService";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
   GithubOutlined,
   YoutubeOutlined,
@@ -11,7 +9,6 @@ import {
 } from "@ant-design/icons";
 
 function ProjectCard() {
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [projectsData, setProjectsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -19,21 +16,18 @@ function ProjectCard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        dispatch(showLoading());
         const projectsResponse = await listProject();
         const projects = projectsResponse.data.data;
         setProjectsData(projects);
         setIsLoading(false);
-        dispatch(hideLoading());
       } catch (error) {
-        dispatch(hideLoading());
         console.error("Error fetching data:", error);
         setProjectsData([]);
         fetchData();
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, []);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },

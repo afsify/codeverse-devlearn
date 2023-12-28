@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import Banner from "../../components/user/Banner";
 import UserLayout from "../../components/layout/UserLayout";
 import ProjectCard from "../../components/user/ProjectCard";
+import CourseCard from "../../components/user/CourseCard";
 
 function Home() {
   const fadeIn = {
@@ -18,6 +19,7 @@ function Home() {
         transition={{ duration: 0.5 }}
       >
         <Banner />
+        <CourseCard />
         <ProjectCard />
       </motion.div>
     </UserLayout>

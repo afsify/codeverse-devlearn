@@ -38,6 +38,10 @@ export const listBanner = () => {
   return userAxiosInstance.get("/list-banner");
 };
 
+export const topCourse = () => {
+  return userAxiosInstance.get("/top-course");
+};
+
 export const listProject = () => {
   return userAxiosInstance.get("/list-project");
 };

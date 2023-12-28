@@ -23,6 +23,7 @@ user_router.post("/reset-password", userController.resetPassword);
 //? =============================================== Home Page ===============================================
 
 user_router.get("/list-banner", userController.listBanner);
+user_router.get("/top-course", userController.topCourse);
 user_router.get("/list-project", userController.listProject);
 
 //? ================================================ Service ================================================

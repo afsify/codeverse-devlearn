@@ -23,6 +23,7 @@ function Footer() {
       } catch (error) {
         console.error("Error fetching About:", error);
         setAdminData({});
+        fetchAbout();
       }
     };
     fetchAbout();

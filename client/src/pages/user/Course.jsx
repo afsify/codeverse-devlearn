@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,6 @@ import {
   PlaySquareOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-import { motion } from "framer-motion";
 
 function Course() {
   const dispatch = useDispatch();

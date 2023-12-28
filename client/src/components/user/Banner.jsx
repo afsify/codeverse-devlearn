@@ -1,35 +1,29 @@
-import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
 import { listBanner } from "../../api/services/userService";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
 import { Image as AntImage } from "antd";
 import imageLinks from "../../assets/images/imageLinks";
 
 function Banner() {
-  const dispatch = useDispatch();
   const [banners, setBanners] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        dispatch(showLoading());
         const response = await listBanner();
         const bannerData = response.data.data;
         setIsLoading(false);
-        dispatch(hideLoading());
         setBanners(bannerData);
       } catch (error) {
-        dispatch(hideLoading());
         console.error("Error fetching banners:", error);
         setBanners([]);
         fetchBanners();
       }
     };
     fetchBanners();
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="relative">
