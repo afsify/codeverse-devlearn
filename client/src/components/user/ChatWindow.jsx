@@ -225,7 +225,10 @@ function ChatWindow({
                   {skeleton ? (
                     <Skeleton.Avatar active />
                   ) : (
-                    <img src={user.image} alt="Profile" />
+                    <img
+                      src={user?.image || imageLinks.profile}
+                      alt="Profile"
+                    />
                   )}
                 </div>
               ))

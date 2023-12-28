@@ -108,14 +108,8 @@ function CourseCard() {
                     <Skeleton type="text" count={1} />
                     <Skeleton type="text" count={1} />
                     <Skeleton type="text" count={1} />
-                    <Skeleton type="text" count={1} />
-                    <Skeleton type="text" count={1} />
                   </div>
-                  <div className="flex justify-center gap-x-5">
-                    <Skeleton type="circle" count={1} />
-                    <Skeleton type="circle" count={1} />
-                    <Skeleton type="circle" count={1} />
-                  </div>
+                  <div className="h-10 rounded-lg mt-5 bg-gray-300 animate-pulse"></div>
                 </div>
               </div>
             ))
