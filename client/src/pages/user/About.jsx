@@ -161,21 +161,21 @@ function About() {
             <motion.div variants={fadeInUp}>
               <h1 className="text-2xl font-semibold mb-1">{adminData?.name}</h1>
               <p className="text-gray-600 font-sans mb-1">
-                <span className="me-2">
+                <a className="me-2 hover:text-blue-500" href={`mailto:${adminData?.email}`} target="_blank" rel="noopener noreferrer">
                   <MailOutlined />
-                </span>
+                </a>
                 {adminData?.email}
               </p>
               <p className="text-gray-600 font-sans mb-1">
-                <span className="me-2">
+                <a className="me-2 hover:text-blue-500" href={`tel:${adminData?.phone}`} target="_blank" rel="noopener noreferrer">
                   <PhoneOutlined />
-                </span>
+                </a>
                 {adminData?.phone}
               </p>
               <p className="text-gray-600 font-sans max-w-[250px] mb-4">
-                <span className="me-2">
+                <a className="me-2 hover:text-blue-500" href={`https://www.google.com/maps/search/?api=1&query=${adminData?.address}`} target="_blank" rel="noopener noreferrer">
                   <EnvironmentOutlined />
-                </span>
+                </a>
                 {adminData?.address}
               </p>
             </motion.div>
