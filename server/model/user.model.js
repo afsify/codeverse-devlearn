@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "unblocked",
     },
+    developer: {
+      type: Boolean,
+      default: false,
+    },
     prime: {
       type: Boolean,
       default: false,

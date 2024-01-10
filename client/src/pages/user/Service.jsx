@@ -1,8 +1,8 @@
 import { Input } from "antd";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import UserLayout from "../../components/layout/UserLayout";
 import { listService } from "../../api/services/userService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -10,6 +10,7 @@ import { SearchOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
 function Service() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [filteredServices, setFilteredServices] = useState([]);
@@ -84,33 +85,32 @@ function Service() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-4">
         {filteredServices.map((service, index) => (
-          <Link key={service._id} to={service.link}>
-            <motion.div
-              key={service._id}
-              variants={fadeInUp}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              transition={{ duration: 0.05, delay: index * 0.05 }}
-              className="col-span-1 transform rounded-lg transition duration-300 ease-in-out"
-            >
-              <motion.div>
-                <div className="bg-white shadow-md hover:scale-105 hover:shadow-xl duration-300 overflow-hidden rounded-lg cursor-pointer">
-                  <img
-                    alt={service.title}
-                    src={service.image}
-                    className="w-full h-40 object-cover rounded-t-lg"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-600">{service.description}</p>
-                  </div>
+          <motion.div
+            key={service._id}
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            onClick={() => navigate(`${service.link}`, { state: { service } })}
+            transition={{ duration: 0.05, delay: index * 0.05 }}
+            className="col-span-1 transform rounded-lg transition duration-300 ease-in-out"
+          >
+            <motion.div>
+              <div className="bg-white shadow-md hover:scale-105 hover:shadow-xl duration-300 overflow-hidden rounded-lg cursor-pointer">
+                <img
+                  alt={service.title}
+                  src={service.image}
+                  className="w-full h-40 object-cover rounded-t-lg"
+                />
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-600">{service.description}</p>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
-          </Link>
+          </motion.div>
         ))}
       </div>
     </UserLayout>

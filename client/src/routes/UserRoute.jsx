@@ -10,10 +10,12 @@ const Home = lazy(() => import("../pages/user/Home"));
 const Login = lazy(() => import("../pages/user/Login"));
 const About = lazy(() => import("../pages/user/About"));
 const Course = lazy(() => import("../pages/user/Course"));
+const DevHub = lazy(() => import("../pages/user/DevHub"));
 const Service = lazy(() => import("../pages/user/Service"));
 const Contact = lazy(() => import("../pages/user/Contact"));
 const Library = lazy(() => import("../pages/user/Library"));
 const Profile = lazy(() => import("../pages/user/Profile"));
+const Discover = lazy(() => import("../pages/user/Discover"));
 const Register = lazy(() => import("../pages/user/Register"));
 const Messages = lazy(() => import("../pages/user/Messages"));
 const ResetOTP = lazy(() => import("../pages/user/ResetOTP"));
@@ -38,8 +40,10 @@ function UserRoute() {
       <Route path={userPath.home} element={<Home />} />
       <Route path={userPath.about} element={<About />} />
       <Route path={userPath.course} element={<Course />} />
+      <Route path={userPath.devhub} element={<DevHub />} />
       <Route path={userPath.service} element={<Service />} />
       <Route path={userPath.contact} element={<Contact />} />
+      <Route path={userPath.discover} element={<Discover />} />
       <Route path={userPath.courseDetail} element={<CourseDetail />} />
       <Route element={<PrivateRoute role={"user"} route={userPath.home} />}>
         <Route path={userPath.library} element={<Library />} />
