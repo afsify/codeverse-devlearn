@@ -4,6 +4,7 @@ const { userAuth } = require("../middleware/auth");
 const userController = require("../controller/user/user.controller");
 const chatController = require("../controller/user/chat.controller");
 const orderController = require("../controller/user/order.controller");
+const devhubController = require("../controller/user/devhub.controller");
 const accountController = require("../controller/user/account.controller");
 const messageController = require("../controller/user/message.controller");
 
@@ -29,6 +30,12 @@ user_router.get("/list-project", userController.listProject);
 //? ================================================ Service ================================================
 
 user_router.get("/list-service", userController.listService);
+
+//? ================================================ DevHub ================================================
+
+user_router.post("/create-dev", userAuth, devhubController.createDev);
+user_router.get("/list-dev", userAuth, devhubController.listDev);
+user_router.get("/discover-dev", devhubController.discoverDev);
 
 //? ================================================ Course ================================================
 
@@ -65,7 +72,11 @@ user_router.put("/group-add", userAuth, chatController.groupAdd);
 
 //? ================================================ Message ================================================
 
-user_router.get("/list-message/:chatId", userAuth, messageController.listMessage);
+user_router.get(
+  "/list-message/:chatId",
+  userAuth,
+  messageController.listMessage
+);
 user_router.post("/send-message", userAuth, messageController.sendMessage);
 
 module.exports = user_router;

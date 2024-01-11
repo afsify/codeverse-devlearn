@@ -11,6 +11,7 @@ import { cloudUpload } from "../../api/cloudinary";
 import { useState, useEffect, useRef } from "react";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { Spin, Tooltip, Button, Skeleton, Upload, Modal } from "antd";
 import { listMessage, sendMessage } from "../../api/services/userService";
 import {
@@ -272,19 +273,31 @@ function ChatWindow({
                       }
                       {selectedChat.users.find(
                         (user) => user._id !== userData._id
-                      )?.prime && (
+                      )?.developer ? (
+                        <TokenRoundedIcon
+                          className="ml-1 mb-1"
+                          sx={{ fontSize: 20, color: "green" }}
+                        />
+                      ) : selectedChat.users.find(
+                          (user) => user._id !== userData._id
+                        )?.prime ? (
                         <VerifiedIcon
                           className="ml-1 mb-1"
                           color="primary"
                           sx={{ fontSize: 20 }}
                         />
+                      ) : (
+                        ""
                       )}
                     </span>
                   )) ||
                   "Unknown User"}
             </h2>
           </div>
-          <div onClick={() => setSelectedChat()} className="flex">
+          <div
+            onClick={() => setSelectedChat()}
+            className="flex cursor-pointer"
+          >
             <ArrowLeftOutlined className="text-2xl text-gray-300" />
           </div>
         </Name>

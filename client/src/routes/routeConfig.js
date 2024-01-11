@@ -4,6 +4,7 @@ export const adminPath = {
   feedback: "feedback",
   settings: "settings",
   dashboard: "dashboard",
+  devManage: "dev-manage",
   userManage: "user-manage",
   courseManage: "course-manage",
   bannerManage: "banner-manage",

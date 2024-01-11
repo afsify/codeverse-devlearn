@@ -1,13 +1,16 @@
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import Name from "../../components/user/Name";
+import { useLocation } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 import ChatList from "../../components/user/ChatList";
 import imageLinks from "../../assets/images/imageLinks";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import ChatWindow from "../../components/user/ChatWindow";
 import GroupModal from "../../components/user/GroupModal";
 import ProfileMenu from "../../components/user/ProfileMenu";
 import DefaultWindow from "../../components/user/DefaultWindow";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { Button, Tooltip, List, AutoComplete, Skeleton } from "antd";
 import { motion } from "framer-motion";
 import {
@@ -19,7 +22,9 @@ import {
 } from "../../api/services/userService";
 
 const Messages = () => {
+  const location = useLocation();
   const [users, setUsers] = useState([]);
+  const selected = location.state?.selected;
   const [chatData, setChatData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [skeleton, setSkeleton] = useState(false);
@@ -91,7 +96,8 @@ const Messages = () => {
       }
     };
     fetchChatData();
-  }, []);
+    setSelectedChat(selected);
+  }, [selected]);
 
   const autoCompleteOptions = users.map((user) => ({
     value: user.name,
@@ -112,6 +118,20 @@ const Messages = () => {
               <div className="flex-col items-center">
                 <h1 className="text-[13px] capitalize font-semibold">
                   {user.name}
+                  {user.developer ? (
+                    <TokenRoundedIcon
+                      className="ml-1 mb-1"
+                      sx={{ fontSize: 12, color: "green" }}
+                    />
+                  ) : user.prime ? (
+                    <VerifiedIcon
+                      className="ml-1 mb-1"
+                      color="primary"
+                      sx={{ fontSize: 12 }}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </h1>
                 <h1 className="text-xs text-gray-500 font-sans">
                   {user.email}

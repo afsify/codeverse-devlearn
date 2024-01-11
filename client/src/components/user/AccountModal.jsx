@@ -1,6 +1,8 @@
 import { Modal } from "antd";
 import PropTypes from "prop-types";
 import imageLinks from "../../assets/images/imageLinks";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 
 const AccountModal = ({ visible, toggleModal, user }) => {
   return (
@@ -13,6 +15,20 @@ const AccountModal = ({ visible, toggleModal, user }) => {
         </div>
         <h2 className="text-2xl text-gray-700 font-semibold capitalize">
           {user?.name}
+          {user?.developer ? (
+            <TokenRoundedIcon
+              className="ml-1 mb-1"
+              sx={{ fontSize: 20, color: "green" }}
+            />
+          ) : user?.prime ? (
+            <VerifiedIcon
+              className="ml-1 mb-1"
+              color="primary"
+              sx={{ fontSize: 20 }}
+            />
+          ) : (
+            ""
+          )}
         </h2>{" "}
         <p className="text-sm text-gray-600">{user?.email}</p>{" "}
         <h3 className="text-md text-gray-500 capitalize">{user?.place}</h3>{" "}
@@ -27,6 +43,8 @@ AccountModal.propTypes = {
   user: PropTypes.shape({
     image: PropTypes.string,
     name: PropTypes.string,
+    developer: PropTypes.string,
+    prime: PropTypes.string,
     email: PropTypes.string,
     place: PropTypes.string,
   }),

@@ -30,6 +30,24 @@ export const unblockUser = (userId) => {
   return adminAxiosInstance.post(`/unblock-user/${userId}`);
 };
 
+//? ============================================== Dev Manage ==============================================
+
+export const devRequest = () => {
+  return adminAxiosInstance.get("/dev-request");
+};
+
+export const acceptDev = (devId) => {
+  return adminAxiosInstance.post(`/accept-dev/${devId}`);
+};
+
+export const rejectDev = (devId) => {
+  return adminAxiosInstance.post(`/reject-dev/${devId}`);
+};
+
+export const removeDev = (devId) => {
+  return adminAxiosInstance.post(`/remove-dev/${devId}`);
+};
+
 //? ============================================= Banner Manage =============================================
 
 export const listBanner = () => {

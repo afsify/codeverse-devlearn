@@ -3,6 +3,7 @@ import { Skeleton, Menu, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import imageLinks from "../../assets/images/imageLinks";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 
 function ChatList({
   chatData,
@@ -39,15 +40,13 @@ function ChatList({
           );
           return (
             <li
+              onClick={() => setSelectedChat(chat)}
               key={chat._id}
               className={`${
                 selectedChat === chat && "bg-light-purple"
               } border border-light-white relative rounded-md p-3 cursor-pointer hover:bg-light-white flex items-center shadow-sm shadow-black hover:shadow-md hover:shadow-black gap-2`}
             >
-              <div
-                onClick={() => setSelectedChat(chat)}
-                className="flex items-center gap-3"
-              >
+              <div className="flex items-center gap-3">
                 {chat.isGroupChat ? (
                   <div className="flex items-center">
                     {chat.users.slice(0, 3).map((user, index) => (
@@ -90,12 +89,19 @@ function ChatList({
                     ) : (
                       <span>
                         {receiver[0].name}
-                        {receiver[0].prime && (
+                        {receiver[0].developer ? (
+                          <TokenRoundedIcon
+                            className="ml-1 mb-1"
+                            sx={{ fontSize: 16, color: "green" }}
+                          />
+                        ) : receiver[0].prime ? (
                           <VerifiedIcon
-                          className="ml-1 mb-1"
-                          color="primary"
-                          sx={{ fontSize: 16 }}
-                        />
+                            className="ml-1 mb-1"
+                            color="primary"
+                            sx={{ fontSize: 16 }}
+                          />
+                        ) : (
+                          ""
                         )}
                       </span>
                     )}
@@ -124,7 +130,10 @@ function ChatList({
                   )}
                 </div>
               </div>
-              <div className="text-gray-700 absolute right-4 z-10 rounded-full hover:bg-light-white pt-1">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="text-gray-700 absolute right-4 z-10 rounded-full hover:bg-light-white pt-1"
+              >
                 <Dropdown
                   overlay={chat.isGroupChat ? groupMenu : chatMenu}
                   trigger={["click"]}

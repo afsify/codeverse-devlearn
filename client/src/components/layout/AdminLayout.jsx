@@ -17,6 +17,7 @@ import {
   BarChartOutlined,
   LeftCircleFilled,
   PoweroffOutlined,
+  CodeSandboxOutlined,
 } from "@ant-design/icons";
 
 function AdminLayout({ children }) {
@@ -46,7 +47,7 @@ function AdminLayout({ children }) {
       path: `/admin/${adminPath.bannerManage}`,
     },
     {
-      id:4 ,
+      id: 4,
       title: "Projects",
       icon: <GithubOutlined />,
       path: `/admin/${adminPath.projectManage}`,
@@ -74,6 +75,12 @@ function AdminLayout({ children }) {
       title: "Users",
       icon: <TeamOutlined />,
       path: `/admin/${adminPath.userManage}`,
+    },
+    {
+      id: 9,
+      title: "Devs",
+      icon: <CodeSandboxOutlined />,
+      path: `/admin/${adminPath.devManage}`,
     },
   ];
 

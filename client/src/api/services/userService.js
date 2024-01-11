@@ -52,6 +52,18 @@ export const listService = () => {
   return userAxiosInstance.get("/list-service");
 };
 
+export const createDev = (values) => {
+  return userAxiosInstance.post("/create-dev", values);
+};
+
+export const listDev = () => {
+  return userAxiosInstance.get("/list-dev");
+};
+
+export const discoverDev = () => {
+  return userAxiosInstance.get("/discover-dev");
+};
+
 //? ================================================ Course ================================================
 
 export const listCourse = () => {

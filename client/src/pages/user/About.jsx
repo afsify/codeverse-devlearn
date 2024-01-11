@@ -204,7 +204,7 @@ function About() {
                 href={adminData.contact?.github || "https://github.com/example"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group hover:scale-125 duration-300"
+                className="group hover:scale-125 duration-300 hover:text-[#9e5eb8]"
               >
                 <GithubOutlined style={{ fontSize: "40px" }} />
                 <p className="hidden text-[9px] text-center group-hover:grid font-semibold font-sans">
@@ -246,7 +246,7 @@ function About() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group hover:scale-125 duration-300 hover:text-[#833ab4]"
+                className="group hover:scale-125 duration-300 hover:text-[#ea0120]"
               >
                 <InstagramOutlined style={{ fontSize: "40px" }} />
                 <p className="hidden text-[9px] text-center group-hover:grid font-semibold font-sans">

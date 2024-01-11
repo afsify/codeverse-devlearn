@@ -7,6 +7,7 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
 import { listOrder } from "../../api/services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import {
   UserOutlined,
   MessageOutlined,
@@ -85,12 +86,19 @@ function Dropdown() {
           <h3 className="text-center text-lg uppercase font-semibold text-gray-700">
             <span>
               {userData.name}
-              {userData.prime && (
+              {userData.developer ? (
+                <TokenRoundedIcon
+                  className="ml-1 mb-1"
+                  sx={{ fontSize: 16, color: "green" }}
+                />
+              ) : userData.prime ? (
                 <VerifiedIcon
                   className="ml-1 mb-1"
                   color="primary"
                   sx={{ fontSize: 16 }}
                 />
+              ) : (
+                ""
               )}
             </span>
             <br />
