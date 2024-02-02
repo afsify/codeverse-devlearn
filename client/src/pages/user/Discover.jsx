@@ -107,8 +107,10 @@ function Discover() {
         toast.error("Something went wrong");
       }
     };
-    fetchChatData();
-  }, []);
+    if (logged) {
+      fetchChatData();
+    }
+  }, [logged]);
 
   const handleConnectClick = (user) => {
     logged ? handleAccessChat(user) : navigate(userPath.login);
