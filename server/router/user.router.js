@@ -72,11 +72,7 @@ user_router.put("/group-add", userAuth, chatController.groupAdd);
 
 //? ================================================ Message ================================================
 
-user_router.get(
-  "/list-message/:chatId",
-  userAuth,
-  messageController.listMessage
-);
+user_router.get("/list-message/:chatId", userAuth, messageController.listMessage);
 user_router.post("/send-message", userAuth, messageController.sendMessage);
 
 module.exports = user_router;
