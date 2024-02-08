@@ -55,6 +55,52 @@
   background-color: #c0c0c0;
 }
 
+/* For WebKit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #132b68;
+  border-radius: 10px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #081a51;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #d3d3d3;
+  border-radius: 10px;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scrollbar-color: #132b68 #d3d3d3;
+}
+
+*::-ms-scrollbar {
+  width: 3px;
+}
+
+*::-ms-scrollbar-thumb {
+  background-color: #132b68;
+  border-radius: 10px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+*::-ms-scrollbar-thumb:hover {
+  background-color: #081a51;
+}
+
+*::-ms-scrollbar-track {
+  background-color: #d3d3d3;
+  border-radius: 10px;
+}
+
 input[type="text"]:focus ~ .input-text,
 input[type="text"]:not(:placeholder-shown) ~ .input-text {
   @apply text-blue-500 text-lg transform -translate-y-6 -translate-x-1 scale-75;
