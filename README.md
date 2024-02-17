@@ -7,10 +7,11 @@ Welcome to the Codeverse DevLearn project! This platform is designed to a freela
 - **User Authentication:** Securely log in and manage your profile, services, and courses with our robust user authentication system.
 - **Service and Course Offerings:** Freelancers can offer services, provide courses, and users can explore and enroll in them.
 - **Prime Membership:** Prime members enjoy exclusive benefits, including support group chat, personal support, meeting sessions, and a Prime Badge.
-- **Live Chat:** Embrace a modular architecture that enhances flexibility and scalability for future development.
+- **Live Chat:** Engage in real-time conversations with other users and freelancers through the live chat feature.
 - **DevHub for Developers:** A dedicated space for developers to showcase their skills, share insights, and collaborate with others.
 - **Library for Purchased Courses:** Access a centralized library to manage and revisit purchased courses conveniently.
-- **Edit, Add, Delete, Read:** Perform essential operations with ease, enabling you to manage your data effortlessly at any given moment.
+- **Responsive Design:** The platform is designed to provide a seamless experience across various devices.
+- **Modular Architecture:** Embrace a modular architecture that enhances flexibility and scalability for future development.
 
 ## Tools and Technologies
 
