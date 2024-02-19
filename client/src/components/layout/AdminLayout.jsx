@@ -148,7 +148,7 @@ function AdminLayout({ children }) {
           </ul>
         </div>
       </aside>
-      <main className="w-full p-2 overflow-y-scroll h-screen scrollable-container">
+      <main className="w-full p-2 overflow-y-scroll h-screen">
         {children}
       </main>
       {nav && (

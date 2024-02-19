@@ -214,7 +214,7 @@ function ChatWindow({
 
   return (
     <div className="h-screen flex">
-      <div className="w-full pt-6 px-2 relative duration-300 overflow-y-scroll scrollable-container">
+      <div className="w-full pt-6 px-2 relative duration-300 overflow-y-scroll">
         <Name>
           <div className="flex items-center">
             {selectedChat.isGroupChat ? (

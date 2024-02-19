@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import Switcher from "../constant/Switcher";
 import { useState, useEffect, useRef } from "react";
 import { userPath } from "../../routes/routeConfig";
 import { userActions } from "../../utils/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
 import { listOrder } from "../../api/services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
+import { selectIsDarkTheme, toggleTheme } from "../../utils/themeSlice";
 import {
   UserOutlined,
   MessageOutlined,
@@ -22,6 +24,7 @@ function Dropdown() {
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
+  const isDarkTheme = useSelector(selectIsDarkTheme);
   const logged = localStorage.getItem("userToken") !== null;
 
   useEffect(() => {
@@ -59,6 +62,10 @@ function Dropdown() {
       }
     }
   }, [logged]);
+
+  const handleChange = () => {
+    dispatch(toggleTheme());
+  };
 
   return (
     <div className="relative">
@@ -106,7 +113,10 @@ function Dropdown() {
               {userData.email}
             </span>
           </h3>
-          <ul className="mt-4 space-y-2">
+          <div className="flex justify-center mt-2">
+          <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
+          </div>
+          <ul className="mt-2 space-y-2">
             <DropdownItem
               text="My Profile"
               icon={<UserOutlined />}

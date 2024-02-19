@@ -80,7 +80,7 @@ function Feedback() {
       </Title>
       <Card className="shadow-sm shadow-black mb-4 mt-5">
         <Table
-          className="overflow-y-scroll scrollable-container"
+          className="overflow-y-scroll"
           dataSource={messages}
           columns={columns}
           pagination={false}

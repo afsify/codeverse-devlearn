@@ -300,7 +300,7 @@ function DevHub() {
                         {dev.experience}
                       </p>
                     </div>
-                    <div className="flex flex-wrap overflow-y-auto max-h-[59px] scrollable-container justify-center mt-2">
+                    <div className="flex flex-wrap overflow-y-auto max-h-[59px] justify-center mt-2">
                       {dev.skills.map((skill) => (
                         <Tag key={skill} className="mb-2 mx-1">
                           {skill}

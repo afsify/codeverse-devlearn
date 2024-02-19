@@ -201,7 +201,7 @@ const Messages = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -20, opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="w-full md:w-80 pt-6 px-1 relative duration-300 overflow-y-scroll scrollable-container"
+          className="w-full md:w-80 pt-6 px-1 relative duration-300 overflow-y-scroll"
         >
           <Name>
             <AutoComplete
