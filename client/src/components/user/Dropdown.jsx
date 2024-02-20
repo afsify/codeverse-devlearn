@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import Switcher from "../constant/Switcher";
-import { useState, useEffect, useRef } from "react";
+import { Dropdown as AntDropdown } from "antd";
 import { userPath } from "../../routes/routeConfig";
 import { userActions } from "../../utils/userSlice";
+import { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
@@ -18,10 +19,8 @@ import {
 } from "@ant-design/icons";
 
 function Dropdown() {
-  const menuRef = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const isDarkTheme = useSelector(selectIsDarkTheme);
@@ -42,18 +41,6 @@ function Dropdown() {
   }, [dispatch]);
 
   useEffect(() => {
-    let handler = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  }, [menuRef]);
-
-  useEffect(() => {
     if (logged) {
       const encodedUserData = localStorage.getItem("userData");
       if (encodedUserData) {
@@ -67,38 +54,19 @@ function Dropdown() {
     dispatch(toggleTheme());
   };
 
-  return (
-    <div className="relative">
-      <div
-        className="cursor-pointer hover:scale-110 duration-300"
-        onClick={logged ? () => setOpen(!open) : () => navigate(userPath.login)}
-      >
-        {logged && userData && userData.image ? (
-          <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-md shadow-black ">
-            <img src={userData.image} alt="User" />
-          </div>
-        ) : (
-          <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-md shadow-black ">
-            <img src={imageLinks.profile} alt="Default User" />
-          </div>
-        )}
-      </div>
-      {logged && userData && (
-        <div
-          className={`${
-            open ? "block" : "hidden"
-          } absolute top-0 right-0 mt-16 w-48 p-4 bg-white text-black shadow-xl rounded-lg`}
-          ref={menuRef}
-        >
-          <h3 className="text-center text-lg uppercase font-semibold text-gray-700">
+  const items = [
+    {
+      label: (
+        <div className="py-1">
+          <h3 className="text-center text-lg uppercase font-semibold">
             <span>
-              {userData.name}
-              {userData.developer ? (
+              {userData?.name}
+              {userData?.developer ? (
                 <TokenRoundedIcon
                   className="ml-1 mb-1"
                   sx={{ fontSize: 16, color: "green" }}
                 />
-              ) : userData.prime ? (
+              ) : userData?.prime ? (
                 <VerifiedIcon
                   className="ml-1 mb-1"
                   color="primary"
@@ -110,28 +78,28 @@ function Dropdown() {
             </span>
             <br />
             <span className="text-sm font-normal normal-case font-sans text-gray-500">
-              {userData.email}
+              {userData?.email}
             </span>
           </h3>
           <div className="flex justify-center mt-2">
-          <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
+            <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
           </div>
           <ul className="mt-2 space-y-2">
             <DropdownItem
               text="My Profile"
               icon={<UserOutlined />}
-              path={userPath.profile}
+              path={userPath?.profile}
             />
             <DropdownItem
               text="Messages"
               icon={<MessageOutlined />}
-              path={userPath.messages}
+              path={userPath?.messages}
             />
-            {userOrders.length > 0 && (
+            {userOrders?.length > 0 && (
               <DropdownItem
                 text="Library"
                 icon={<PlaySquareOutlined />}
-                path={userPath.library}
+                path={userPath?.library}
               />
             )}
             <li
@@ -140,17 +108,49 @@ function Dropdown() {
                 localStorage.removeItem("userData");
                 setUserData(null);
                 dispatch(userActions.userLogout());
-                navigate(userPath.home);
+                navigate(userPath?.home);
               }}
-              className="flex items-center cursor-pointer px-2 py-1 hover:bg-light-red hover:text-red-500 rounded-md space-x-2"
+              className="flex items-center cursor-pointer px-2 py-1 hover:bg-light-red hover:text-red-500 rounded-md text-base space-x-2"
             >
               <LogoutOutlined />
               <span className="font-medium hover:text-red-500">Logout</span>
             </li>
           </ul>
         </div>
+      ),
+    },
+  ];
+
+  return (
+    <Fragment>
+      {logged && userData ? (
+        <AntDropdown
+          menu={{
+            items,
+          }}
+          arrow={{
+            pointAtCenter: true,
+          }}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <div className="cursor-pointer hover:scale-110 duration-300">
+            <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-md shadow-black ">
+              <img src={userData?.image || imageLinks?.profile} alt="User" />
+            </div>
+          </div>
+        </AntDropdown>
+      ) : (
+        <div
+          className="cursor-pointer hover:scale-110 duration-300"
+          onClick={() => navigate(userPath.login)}
+        >
+          <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-md shadow-black ">
+            <img src={imageLinks?.profile} alt="Default User" />
+          </div>
+        </div>
       )}
-    </div>
+    </Fragment>
   );
 }
 
@@ -163,11 +163,11 @@ function DropdownItem({ text, icon, path }) {
     <li
       onClick={() => navigate(path)}
       className={`${
-        isActive && "bg-light-purple text-dark-purple font-bold"
-      } flex items-center cursor-pointer px-2 py-1 hover:bg-light-purple hover:text-dark-purple rounded-md space-x-2`}
+        isActive && "bg-light-purple text-blue-500 font-bold"
+      } flex items-center cursor-pointer px-2 py-1 hover:bg-dark-white hover:text-blue-500 rounded-md text-base space-x-2`}
     >
       {icon}
-      <span className="font-medium hover:text-dark-purple">{text}</span>
+      <span className="font-medium hover:text-blue-500">{text}</span>
     </li>
   );
 }

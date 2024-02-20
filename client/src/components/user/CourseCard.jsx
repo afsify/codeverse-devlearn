@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Card, Typography } from "antd";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
@@ -13,6 +13,8 @@ import {
   topCourse,
 } from "../../api/services/userService";
 import Skeleton from "./Skeleton";
+
+const { Title } = Typography;
 
 function CourseCard() {
   const navigate = useNavigate();
@@ -77,17 +79,14 @@ function CourseCard() {
   return (
     <>
       <div className="flex md:justify-between md:flex-row flex-col mb-6 mt-8 px-4">
-        <h1 className="text-3xl font-semibold text-gray-800">
-          Trending Courses
-        </h1>
+        <Title level={2}>Trending Courses</Title>
         <Button
           onClick={() => navigate(userPath.course)}
           style={{
-            backgroundColor: "#FFFFFF",
-            color: "#000000",
+            backgroundColor: "transparent",
           }}
           size="large"
-          className="my-3  md:my-0 font-semibold"
+          className="my-3 md:my-0 font-semibold"
         >
           More Courses
         </Button>
@@ -124,68 +123,73 @@ function CourseCard() {
                 className="col-span-1 transform rounded-lg transition duration-300"
               >
                 <motion.div>
-                  <div className="bg-white shadow-md rounded-lg hover:scale-105 hover:shadow-xl duration-300 overflow-hidden cursor-pointer">
-                    <img
+                  <Card
+                    cover={
+                      <img
+                        onClick={() =>
+                          navigate(`${userPath.courseDetail}`, {
+                            state: { course },
+                          })
+                        }
+                        alt={course.title}
+                        src={course.image}
+                        className="w-full h-40 object-cover rounded-t-lg"
+                      />
+                    }
+                    className="shadow-md rounded-lg hover:scale-105 hover:shadow-xl duration-300 overflow-hidden cursor-pointer"
+                  >
+                    <h3
+                      className="text-lg font-semibold mb-2 cursor-pointer"
                       onClick={() =>
                         navigate(`${userPath.courseDetail}`, {
                           state: { course },
                         })
                       }
-                      alt={course.title}
-                      src={course.image}
-                      className="w-full h-40 object-cover rounded-t-lg"
-                    />
-                    <div className="p-4">
-                      <h3
-                        className="text-lg font-semibold mb-2 cursor-pointer"
-                        onClick={() =>
-                          navigate(`${userPath.courseDetail}`, {
-                            state: { course },
-                          })
-                        }
+                    >
+                      {course.title}
+                    </h3>
+                    <p
+                      className="text-gray-600 text-base cursor-pointer"
+                      onClick={() =>
+                        navigate(`${userPath.courseDetail}`, {
+                          state: { course },
+                        })
+                      }
+                    >
+                      {course.description}
+                    </p>
+                    {userOrders.some(
+                      (order) => order.courseId === course._id
+                    ) ? (
+                      <Button
+                        size="large"
+                        className="mt-5 w-full font-semibold"
+                        disabled
                       >
-                        {course.title}
-                      </h3>
-                      <p
-                        className="text-gray-600 cursor-pointer"
-                        onClick={() =>
-                          navigate(`${userPath.courseDetail}`, {
-                            state: { course },
-                          })
-                        }
+                        Purchased
+                      </Button>
+                    ) : (
+                      <StripeCheckout
+                        token={(token) => handlePaymentSuccess(token, course)}
+                        stripeKey={import.meta.env.VITE_STRIPE_KEY}
+                        name={course.title}
+                        amount={course.price * 100}
+                        currency="INR"
+                        locale="auto"
                       >
-                        {course.description}
-                      </p>
-                      {userOrders.some(
-                        (order) => order.courseId === course._id
-                      ) ? (
                         <Button
                           size="large"
+                          style={{
+                            backgroundColor: "transparent",
+                          }}
                           className="mt-5 w-full font-semibold"
-                          disabled
+                          htmlType="submit"
                         >
-                          Purchased
+                          ₹{course.price}
                         </Button>
-                      ) : (
-                        <StripeCheckout
-                          token={(token) => handlePaymentSuccess(token, course)}
-                          stripeKey={import.meta.env.VITE_STRIPE_KEY}
-                          name={course.title}
-                          amount={course.price * 100}
-                          currency="INR"
-                          locale="auto"
-                        >
-                          <Button
-                            size="large"
-                            className="mt-5 w-full font-semibold"
-                            htmlType="submit"
-                          >
-                            ₹{course.price}
-                          </Button>
-                        </StripeCheckout>
-                      )}
-                    </div>
-                  </div>
+                      </StripeCheckout>
+                    )}
+                  </Card>
                 </motion.div>
               </motion.div>
             ))}

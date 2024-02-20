@@ -14,6 +14,7 @@ export default {
         "light-purple": "rgba(8, 26, 81, 0.17)",
         "light-white": "rgba(255,255,255,0.17)",
         "light-red": "rgba(255, 102, 102, 0.17)",
+        "dark-white": "rgba(192, 192, 192, 0.1)",
         "medium-white": "rgba(192, 192, 192, 0.1)",
         "light-green": "rgba(102 , 255, 102, 0.17)",
       },
