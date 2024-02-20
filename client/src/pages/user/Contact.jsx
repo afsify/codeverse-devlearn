@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { Button, Form, Input } from "antd";
 import StripeCheckout from "react-stripe-checkout";
+import { Button, Form, Input, Typography } from "antd";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import UserLayout from "../../components/layout/UserLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -14,6 +14,8 @@ import {
   WechatFilled,
   VideoCameraFilled,
 } from "@ant-design/icons";
+
+const { Title } = Typography;
 
 function Contact() {
   const dispatch = useDispatch();
@@ -78,10 +80,12 @@ function Contact() {
         >
           <motion.div
             variants={fadeInUp}
-            className="p-5 bg-white shadow-sm shadow-black rounded-lg"
+            className="p-5 shadow-sm shadow-black rounded-lg"
           >
-            <h2 className="text-3xl font-semibold mb-2">Contact Us</h2>
-            <p className="text-gray-600 mb-4">
+            <Title className="mb-2" level={2}>
+              Contact Us
+            </Title>
+            <p className="text-gray-500 mb-4">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If you need
               assistance, have feedback, or anything else, feel free to reach
               out to us using the contact form. We&apos;re here to help!
@@ -131,6 +135,7 @@ function Contact() {
                 <Button
                   className="flex justify-center items-center"
                   size="large"
+                  style={{ color: "white" }}
                   htmlType="submit"
                   icon={<SendOutlined />}
                 >
@@ -141,10 +146,12 @@ function Contact() {
           </motion.div>
           <motion.div
             variants={fadeInUp}
-            className="p-5 bg-white shadow-sm shadow-black rounded-lg"
+            className="p-5 shadow-sm shadow-black rounded-lg"
           >
-            <h2 className="text-3xl font-semibold mb-2">Prime Plans</h2>
-            <p className="text-gray-600 mb-5">
+            <Title className="mb-2" level={2}>
+              Prime Plans
+            </Title>
+            <p className="text-gray-500 mb-5">
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Discover the
               benefits of our Prime Plans, providing you with exclusive access
               to premium content, personalized tech support, engaging live

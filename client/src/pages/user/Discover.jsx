@@ -8,7 +8,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import UserLayout from "../../components/layout/UserLayout";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
-import { Tag, Input, Select, Pagination, Empty, Button } from "antd";
+import {
+  Tag,
+  Input,
+  Select,
+  Pagination,
+  Empty,
+  Button,
+  Card,
+  Typography,
+} from "antd";
 import {
   GithubOutlined,
   SearchOutlined,
@@ -22,6 +31,7 @@ import {
 } from "../../api/services/userService";
 
 const { Option } = Select;
+const { Title } = Typography;
 
 function Discover() {
   const location = useLocation();
@@ -124,7 +134,7 @@ function Discover() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white shadow-md rounded-lg p-4"
+          className="shadow-md rounded-lg p-4"
         >
           <div className="relative w-full h-40 sm:h-80 md:h-[500px]">
             <img
@@ -134,15 +144,17 @@ function Discover() {
             />
           </div>
           <div className="flex justify-center items-center flex-col">
-            <h3 className="text-3xl font-semibold text-center mb-1 mt-4">
+            <Title className="mt-4" level={2}>
               {service.title}
-            </h3>
-            <p className="text-gray-600 text-center md:w-1/2 mb-4">
+            </Title>
+            <p className="text-gray-500 text-center md:w-1/2 mb-4">
               {service.description}
             </p>
           </div>
           <div className="flex justify-between">
-            <h2 className="text-2xl uppercase font-bold">Developers</h2>
+            <Title className="uppercase" level={3}>
+            Developers
+            </Title>
             <div className="flex items-center">
               <Input
                 placeholder="Search by name"
@@ -178,9 +190,9 @@ function Discover() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {paginatedDevs.map((dev) => (
-                <div
-                  key={dev._id}
-                  className="bg-white shadow-lg cursor-pointer hover:scale-105 duration-300 rounded-lg p-6 md:w-80 mx-auto mt-3"
+                <Card
+                  key={dev?._id}
+                  className="shadow-lg cursor-pointer hover:scale-105 duration-300 rounded-lg md:w-80 mx-auto mt-3"
                 >
                   <div className="flex items-center justify-between pb-3 border-b-2">
                     <div className="overflow-hidden rounded-full w-20 h-20 shadow-md">
@@ -190,7 +202,7 @@ function Discover() {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex flex-col justify-center mx-auto items-center text-xl font-semibold text-gray-700 text-center mb-2">
+                    <div className="flex flex-col justify-center mx-auto items-center text-xl font-semibold text-center mb-2">
                       <span>
                         {dev.user?.name}
                         {dev.user?.developer && (
@@ -206,10 +218,10 @@ function Discover() {
                     </div>
                   </div>
                   <div className="flex justify-between mt-2">
-                    <p className="text-center font-sans text-gray-600">
+                    <p className="text-center font-sans text-gray-500">
                       {dev.domain}
                     </p>
-                    <p className="text-center font-sans text-gray-600">
+                    <p className="text-center font-sans text-gray-500">
                       {dev.experience}
                     </p>
                   </div>
@@ -232,7 +244,7 @@ function Discover() {
                     <Button
                       className="rounded-full hover:scale-110 duration-300 flex justify-center items-center"
                       style={{
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "transparent",
                         borderColor: "#67ba6c",
                         color: "#67ba6c",
                       }}
@@ -249,14 +261,14 @@ function Discover() {
                       <GithubOutlined style={{ fontSize: "30px" }} />
                     </a>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}
           <div className="flex justify-between mt-8 mb-4">
             <Select
-              placeholder="Filter by type"
-              className="w-44"
+              placeholder="Filter by Type"
+              className="w-36"
               onChange={(value) => setFilterType(value)}
             >
               <Option value="All">All</Option>

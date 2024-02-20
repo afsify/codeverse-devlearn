@@ -97,7 +97,6 @@ function Dashboard() {
               extra={<ShoppingCartOutlined />}
             >
               <Table
-                className="overflow-y-scroll"
                 columns={columns}
                 dataSource={dashboard.orders}
                 pagination={{ pageSize: 5 }}

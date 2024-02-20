@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StripeCheckout from "react-stripe-checkout";
 import { userPath } from "../../routes/routeConfig";
-import { Button, Input, Tooltip, Pagination } from "antd";
+import { Button, Input, Tooltip, Pagination, Card, Typography } from "antd";
 import UserLayout from "../../components/layout/UserLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
@@ -18,6 +18,8 @@ import {
   PlaySquareOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
+
+const { Title } = Typography;
 
 function Course() {
   const dispatch = useDispatch();
@@ -120,7 +122,7 @@ function Course() {
   return (
     <UserLayout>
       <div className="px-4 pb-3 flex items-center justify-between">
-        <h2 className="text-3xl font-semibold">Courses</h2>
+        <Title level={2}>Courses</Title>
         <div className="flex items-center gap-x-2">
           {userOrders.length > 0 && (
             <Tooltip title="Library" placement="top">
@@ -163,64 +165,71 @@ function Course() {
             className="col-span-1 transform rounded-lg transition duration-300"
           >
             <motion.div>
-              <div className="bg-white shadow-md rounded-lg hover:scale-105 hover:shadow-xl duration-300 overflow-hidden cursor-pointer">
-                <img
+              <Card
+                cover={
+                  <img
+                    onClick={() =>
+                      navigate(`${userPath.courseDetail}`, {
+                        state: { course },
+                      })
+                    }
+                    alt={course.title}
+                    src={course.image}
+                    className="w-full h-40 object-cover rounded-t-lg"
+                  />
+                }
+                className="shadow-md rounded-lg hover:scale-105 hover:shadow-xl duration-300 overflow-hidden cursor-pointer"
+              >
+                <h3
+                  className="text-lg font-semibold mb-2 cursor-pointer"
                   onClick={() =>
-                    navigate(`${userPath.courseDetail}`, { state: { course } })
+                    navigate(`${userPath.courseDetail}`, {
+                      state: { course },
+                    })
                   }
-                  alt={course.title}
-                  src={course.image}
-                  className="w-full h-40 object-cover rounded-t-lg"
-                />
-                <div className="p-4">
-                  <h3
-                    className="text-lg font-semibold mb-2 cursor-pointer"
-                    onClick={() =>
-                      navigate(`${userPath.courseDetail}`, {
-                        state: { course },
-                      })
-                    }
+                >
+                  {course.title}
+                </h3>
+                <p
+                  className="text-gray-500 text-base cursor-pointer"
+                  onClick={() =>
+                    navigate(`${userPath.courseDetail}`, {
+                      state: { course },
+                    })
+                  }
+                >
+                  {course.description}
+                </p>
+                {userOrders.some((order) => order.courseId === course._id) ? (
+                  <Button
+                    size="large"
+                    className="mt-5 w-full font-semibold"
+                    disabled
                   >
-                    {course.title}
-                  </h3>
-                  <p
-                    className="text-gray-600 cursor-pointer"
-                    onClick={() =>
-                      navigate(`${userPath.courseDetail}`, {
-                        state: { course },
-                      })
-                    }
+                    Purchased
+                  </Button>
+                ) : (
+                  <StripeCheckout
+                    token={(token) => handlePaymentSuccess(token, course)}
+                    stripeKey={import.meta.env.VITE_STRIPE_KEY}
+                    name={course.title}
+                    amount={course.price * 100}
+                    currency="INR"
+                    locale="auto"
                   >
-                    {course.description}
-                  </p>
-                  {userOrders.some((order) => order.courseId === course._id) ? (
                     <Button
                       size="large"
                       className="mt-5 w-full font-semibold"
-                      disabled
+                      style={{
+                        backgroundColor: "transparent",
+                      }}
+                      htmlType="submit"
                     >
-                      Purchased
+                      ₹{course.price}
                     </Button>
-                  ) : (
-                    <StripeCheckout
-                      token={(token) => handlePaymentSuccess(token, course)}
-                      stripeKey={import.meta.env.VITE_STRIPE_KEY}
-                      name={course.title}
-                      amount={course.price * 100}
-                      currency="INR"
-                      locale="auto"
-                    >
-                      <Button
-                        size="large"
-                        className="mt-5 w-full font-semibold"
-                        htmlType="submit"
-                      >
-                        ₹{course.price}
-                      </Button>
-                    </StripeCheckout>
-                  )}
-                </div>
-              </div>
+                  </StripeCheckout>
+                )}
+              </Card>
             </motion.div>
           </motion.div>
         ))}

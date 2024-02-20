@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 import toast from "react-hot-toast";
 import ReactPlayer from "react-player";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,8 @@ import {
   createOrder,
 } from "../../api/services/userService";
 import { motion } from "framer-motion";
+
+const { Title } = Typography;
 
 function CourseDetail() {
   const dispatch = useDispatch();
@@ -100,7 +102,7 @@ function CourseDetail() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white shadow-md rounded-lg px-4 pt-1"
+          className="shadow-md rounded-lg px-4 pt-1"
         >
           {selectedVideo ? (
             <div className="flex justify-center w-full h-full">
@@ -123,8 +125,10 @@ function CourseDetail() {
               />
             </div>
           )}
-          <h3 className="text-3xl font-semibold mb-1 mt-4">{course.title}</h3>
-          <p className="text-gray-600 mb-2">{course.description}</p>
+          <Title className="mt-5" level={2}>
+            {course.title}
+          </Title>
+          <p className="text-gray-500 mb-2">{course.description}</p>
           <div className="flex flex-col sm:flex-row justify-between items-center border-t pt-3">
             {course.preview && (
               <div className="mt-2 sm:mt-0">
@@ -180,6 +184,7 @@ function CourseDetail() {
                 >
                   <Button
                     size="large"
+                    style={{ color: "white" }}
                     className="w-44 mt-4 sm:mt-0 font-semibold"
                     htmlType="submit"
                   >
@@ -190,7 +195,9 @@ function CourseDetail() {
             )}
           </div>
           <div className="mt-4 border-t">
-            <h2 className="text-3xl font-semibold mt-3 mb-1">Videos</h2>
+            <Title className="mt-4" level={3}>
+              Videos
+            </Title>
             {isCoursePurchased ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mb-32 pt-2 pb-4">
                 {purchasedOrderData.videos.map((video, index) => (

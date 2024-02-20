@@ -1,18 +1,18 @@
-import { Button, Card, Typography } from "antd";
+import Skeleton from "./Skeleton";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Card, Typography } from "antd";
 import StripeCheckout from "react-stripe-checkout";
 import { userPath } from "../../routes/routeConfig";
+import { useState, useEffect, Fragment } from "react";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
   listOrder,
   createOrder,
   topCourse,
 } from "../../api/services/userService";
-import Skeleton from "./Skeleton";
 
 const { Title } = Typography;
 
@@ -77,7 +77,7 @@ function CourseCard() {
   };
 
   return (
-    <>
+    <Fragment>
       <div className="flex md:justify-between md:flex-row flex-col mb-6 mt-8 px-4">
         <Title level={2}>Trending Courses</Title>
         <Button
@@ -149,7 +149,7 @@ function CourseCard() {
                       {course.title}
                     </h3>
                     <p
-                      className="text-gray-600 text-base cursor-pointer"
+                      className="text-gray-500 text-base cursor-pointer"
                       onClick={() =>
                         navigate(`${userPath.courseDetail}`, {
                           state: { course },
@@ -194,7 +194,7 @@ function CourseCard() {
               </motion.div>
             ))}
       </div>
-    </>
+    </Fragment>
   );
 }
 

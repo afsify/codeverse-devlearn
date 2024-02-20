@@ -1,12 +1,15 @@
 import Skeleton from "./Skeleton";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { Card, Typography } from "antd";
+import { useState, useEffect, Fragment } from "react";
 import { listProject } from "../../api/services/userService";
 import {
   GithubOutlined,
   YoutubeOutlined,
   GlobalOutlined,
 } from "@ant-design/icons";
+
+const { Title } = Typography;
 
 function ProjectCard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,14 +32,14 @@ function ProjectCard() {
     fetchData();
   }, []);
 
+  const categories = [
+    "All",
+    ...new Set(projectsData.map((project) => project.category)),
+  ];
+
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  };
-
-  const buttonVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: { scale: 1, opacity: 1, transition: { duration: 0.3 } },
   };
 
   const filteredProjects =
@@ -45,28 +48,22 @@ function ProjectCard() {
       : projectsData.filter((project) => project.category === selectedCategory);
 
   return (
-    <>
+    <Fragment>
       <div className="flex md:justify-between md:flex-row flex-col mb-6 mt-8 px-4">
-        <h1 className="text-3xl font-semibold text-gray-800">Projects</h1>
+        <Title level={2}>Projects</Title>
         <div className="flex justify-center space-x-4 my-3 md:my-0">
-          {["All", "Static", "EJS", "React", "MERN"].map((category, index) => (
-            <motion.div
-              key={index}
-              variants={buttonVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.1 }}
-            >
-              <span
-                className={`text-black font-semibold cursor-pointer text-lg ${
-                  selectedCategory === category &&
-                  "border-b-4 border-black rounded-b"
+          {categories.map((category, index) => (
+            <div key={index} className="hover:text-blue-500">
+              <Title
+                className={`font-semibold cursor-pointer text-lg ${
+                  selectedCategory === category && "border-b-4  rounded-b"
                 }`}
                 onClick={() => setSelectedCategory(category)}
+                level={5}
               >
                 {category}
-              </span>
-            </motion.div>
+              </Title>
+            </div>
           ))}
         </div>
       </div>
@@ -105,16 +102,20 @@ function ProjectCard() {
                 animate="visible"
                 exit="hidden"
                 transition={{ duration: 0.05, delay: index * 0.05 }}
-                className="bg-white shadow-md rounded-lg overflow-hidden transform hover:shadow-black hover:shadow-md transition duration-300 ease-in-out"
+                className="col-span-1 transform rounded-lg transition duration-300"
               >
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-50 object-cover object-center"
-                />
-                <div className="px-6 py-4">
+                <Card
+                  cover={
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-50 object-cover object-center"
+                    />
+                  }
+                  className="shadow-md rounded-lg hover:scale-105 hover:shadow-xl duration-300 overflow-hidden cursor-pointer"
+                >
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                    <h2 className="text-xl font-semibold  mb-2">
                       {project.title}
                     </h2>
                     {project.category && (
@@ -123,7 +124,7 @@ function ProjectCard() {
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-500 text-sm mb-4">
                     {project.description}
                   </p>
                   <div className="flex justify-center gap-x-5">
@@ -159,11 +160,11 @@ function ProjectCard() {
                       </a>
                     )}
                   </div>
-                </div>
+                </Card>
               </motion.div>
             ))}
       </div>
-    </>
+    </Fragment>
   );
 }
 

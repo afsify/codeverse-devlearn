@@ -1,9 +1,9 @@
-import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
-import { Collapse, Input } from "antd";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import { Collapse, Input, Typography } from "antd";
+import { motion, AnimatePresence } from "framer-motion";
 import { listOrder } from "../../api/services/userService";
 import UserLayout from "../../components/layout/UserLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -14,6 +14,7 @@ import {
 } from "@ant-design/icons";
 
 const { Panel } = Collapse;
+const { Title } = Typography;
 
 const VideoThumbnail = ({ index, video, image, onVideoClick }) => {
   return (
@@ -23,10 +24,10 @@ const VideoThumbnail = ({ index, video, image, onVideoClick }) => {
       whileHover={{ scale: 1.05 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="col-span-1 transform relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
+      className="col-span-1 bg-white transform relative group overflow-hidden cursor-pointer rounded-lg hover:shadow-md transition duration-300"
     >
       <span onClick={() => onVideoClick(video)}>
-        <div className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer">
+        <div className="shadow-md rounded-lg overflow-hidden cursor-pointer">
           <img
             src={image}
             alt={`Video Thumbnail`}
@@ -149,7 +150,7 @@ function Library() {
   return (
     <UserLayout>
       <div className="px-4 pb-3 flex items-center justify-between">
-        <h2 className="text-3xl font-semibold">Library</h2>
+        <Title level={2}>Library</Title>
         <div className="flex items-center">
           <Input
             placeholder="Search services"
@@ -175,7 +176,7 @@ function Library() {
       <AnimatePresence>
         {selectedVideo && (
           <motion.div
-          className="flex justify-center"
+            className="flex justify-center"
             key={selectedVideo}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -198,7 +199,7 @@ function Library() {
         {filteredOrders.map((order) => (
           <motion.div
             key={order._id}
-            className="flex flex-col md:flex-row bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 mx-4 mb-4"
+            className="flex flex-col md:flex-row rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 mx-4 mb-4"
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
@@ -209,8 +210,10 @@ function Library() {
                 alt={order.title}
                 className="w-full h-40 object-cover mb-4 max-w-full"
               />
-              <h2 className="text-xl font-semibold mb-2">{order.title}</h2>
-              <p className="text-gray-600">{order.description}</p>
+              <Title className="mb-2" level={3}>
+                {order.title}
+              </Title>
+              <p className="text-gray-500">{order.description}</p>
               <div className="mt-4 flex justify-between items-center">
                 <div className="text-lg font-semibold font-sans text-green-500">
                   ₹{order.price}

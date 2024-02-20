@@ -1,12 +1,14 @@
-import { Input } from "antd";
 import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Input, Card, Typography } from "antd";
 import UserLayout from "../../components/layout/UserLayout";
 import { listService } from "../../api/services/userService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 import { SearchOutlined, CloseCircleOutlined } from "@ant-design/icons";
+
+const { Title } = Typography;
 
 function Service() {
   const dispatch = useDispatch();
@@ -60,7 +62,7 @@ function Service() {
   return (
     <UserLayout>
       <div className="px-4 pb-3 flex items-center justify-between">
-        <h2 className="text-3xl font-semibold">Services</h2>
+        <Title level={2}>Services</Title>
         <div className="flex items-center">
           <Input
             placeholder="Search services"
@@ -96,19 +98,19 @@ function Service() {
             className="col-span-1 transform rounded-lg transition duration-300 ease-in-out"
           >
             <motion.div>
-              <div className="bg-white shadow-md hover:scale-105 hover:shadow-xl duration-300 overflow-hidden rounded-lg cursor-pointer">
-                <img
-                  alt={service.title}
-                  src={service.image}
-                  className="w-full h-40 object-cover rounded-t-lg"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold mb-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600">{service.description}</p>
-                </div>
-              </div>
+              <Card
+                cover={
+                  <img
+                    alt={service.title}
+                    src={service.image}
+                    className="w-full h-40 object-cover rounded-t-lg"
+                  />
+                }
+                className=" shadow-md hover:scale-105 hover:shadow-xl duration-300 overflow-hidden rounded-lg cursor-pointer"
+              >
+                <h3 className="text-lg font-semibold mb-2">{service.title}</h3>
+                <p className="text-gray-500">{service.description}</p>
+              </Card>
             </motion.div>
           </motion.div>
         ))}

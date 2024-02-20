@@ -1,9 +1,11 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import Switcher from "../constant/Switcher";
 import { adminPath } from "../../routes/routeConfig";
 import { adminActions } from "../../utils/adminSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { selectIsDarkTheme, toggleTheme } from "../../utils/themeSlice";
 import {
   MenuOutlined,
   TeamOutlined,
@@ -26,6 +28,7 @@ function AdminLayout({ children }) {
   const dispatch = useDispatch();
   const [nav, setNav] = useState(false);
   const [open, setOpen] = useState(true);
+  const isDarkTheme = useSelector(selectIsDarkTheme);
 
   const adminMenu = [
     {
@@ -84,6 +87,10 @@ function AdminLayout({ children }) {
     },
   ];
 
+  const handleChange = () => {
+    dispatch(toggleTheme());
+  };
+
   return (
     <div className="container mx-auto flex">
       <aside className="h-screen px-2 hidden md:flex">
@@ -107,7 +114,10 @@ function AdminLayout({ children }) {
               Codeverse
             </h1>
           </div>
-          <ul className="pt-2">
+          <div className="flex justify-center mt-2">
+            <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
+          </div>
+          <ul>
             {adminMenu.map((menu) => {
               const isActive = location.pathname === menu.path;
               return (
@@ -148,9 +158,7 @@ function AdminLayout({ children }) {
           </ul>
         </div>
       </aside>
-      <main className="w-full p-2 overflow-y-scroll h-screen">
-        {children}
-      </main>
+      <main className="w-full p-2 overflow-y-scroll h-screen">{children}</main>
       {nav && (
         <div className="flex top-0 bottom-0 left-0 w-full p-3 fixed z-40">
           <ul className="flex flex-col justify-center items-center rounded-xl w-full shadow-black shadow-md bg-dark-purple ">
