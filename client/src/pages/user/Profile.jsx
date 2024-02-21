@@ -3,10 +3,10 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { Image } from "cloudinary-react";
 import { useDispatch } from "react-redux";
-import { Form, Input, Button, Upload } from "antd";
 import { cloudUpload } from "../../api/cloudinary";
 import { CameraOutlined } from "@ant-design/icons";
 import imageLinks from "../../assets/images/imageLinks";
+import { Form, Input, Button, Upload, Card } from "antd";
 import UserLayout from "../../components/layout/UserLayout";
 import { updateProfile } from "../../api/services/userService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
@@ -93,160 +93,146 @@ function Profile() {
         transition={{ duration: 0.5 }}
         className="flex justify-center items-center"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white shadow-xl rounded-lg p-8 w-full max-w-md"
+        <Card
+          title={<h1 className="text-3xl font-semibold">Profile</h1>}
+          className="w-full mx-auto p-5"
         >
-          <h2 className="text-3xl font-bold mb-4 text-center uppercase">
-            Profile
-          </h2>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.5 }}
-            className="w-40 h-40 mx-auto mb-6 relative"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
-              className="overflow-hidden rounded-full w-40 h-40 mx-auto shadow-lg shadow-black"
-            >
-              {uploading ? (
-                <div className="w-full h-full bg-gray-300 flex justify-center items-center">
-                  <div className="relative h-24 w-24">
-                    <div className="rounded-full h-24 w-24 border-t-4 border-t-blue-500 animate-spin absolute"></div>
-                    <div className="h-full w-full flex justify-center items-center">
-                      <h1 className="text-blue-500 text-3xl font-mono font-extrabold">
-                        &lt;/&gt;
-                      </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="w-full p-4 flex flex-col justify-center items-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5 }}
+                className="w-40 h-40 mx-auto mb-6 relative"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.5 }}
+                  className="overflow-hidden rounded-full w-40 h-40 mx-auto shadow-lg shadow-black"
+                >
+                  {uploading ? (
+                    <div className="w-full h-full bg-gray-300 flex justify-center items-center">
+                      <div className="relative h-24 w-24">
+                        <div className="rounded-full h-24 w-24 border-t-4 border-t-blue-500 animate-spin absolute"></div>
+                        <div className="h-full w-full flex justify-center items-center">
+                          <h1 className="text-blue-500 text-3xl font-mono font-extrabold">
+                            &lt;/&gt;
+                          </h1>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ) : (
-                <Image
-                  className="object-cover"
-                  cloudName={import.meta.env.VITE_CLOUD_NAME}
-                  publicId={image}
-                  width="auto"
-                  height="150"
-                  crop="scale"
-                  alt="Profile"
-                />
-              )}
-            </motion.div>
-            <Upload
-              customRequest={customRequest}
-              accept="image/*"
-              showUploadList={false}
-            >
-              <Button className="flex items-center justify-center text-base p-2 rounded-full absolute bottom-2 right-2">
-                <CameraOutlined />
-              </Button>
-            </Upload>
-          </motion.div>
-          <Input
-            value={userData?.email}
-            placeholder="Email"
-            className="p-2 mb-8"
-            disabled
-          />
-          <Form className="flex flex-col gap-2" onFinish={onFinish}>
-            <Form.Item
-              name="name"
-              rules={[
-                {
-                  pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
-                  message: "Please enter your name",
-                },
-                {
-                  validator: validateName,
-                },
-              ]}
-            >
-              <motion.label
-                whileHover={{ scale: 1.05 }}
-                className="relative cursor-pointer"
-              >
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Name"
-                  className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
-                />
-                <motion.span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
-                  Name
-                </motion.span>
-              </motion.label>
-            </Form.Item>
-            <Form.Item
-              name="phone"
-              rules={[
-                {
-                  pattern: /^\d{10}$/,
-                  message: "Phone number must be 10 digits",
-                },
-                {
-                  validator: validatePhone,
-                },
-              ]}
-            >
-              <motion.label
-                whileHover={{ scale: 1.05 }}
-                className="relative cursor-pointer"
-              >
-                <Input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Phone"
-                  className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
-                />
-                <motion.span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
-                  Phone
-                </motion.span>
-              </motion.label>
-            </Form.Item>
-            <Form.Item
-              name="place"
-              rules={[
-                {
-                  pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
-                  message: "Place can't be empty",
-                },
-                {
-                  validator: validatePlace,
-                },
-              ]}
-            >
-              <motion.label
-                whileHover={{ scale: 1.05 }}
-                className="relative cursor-pointer"
-              >
-                <Input
-                  value={place}
-                  onChange={(e) => setPlace(e.target.value)}
-                  placeholder="Place"
-                  className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
-                />
-                <motion.span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
-                  Place
-                </motion.span>
-              </motion.label>
-            </Form.Item>
-            <Button
-              size="large"
-              className="text-white font-semibold hover:scale-105 duration-300"
-              htmlType="submit"
-            >
-              Update
-            </Button>
-          </Form>
-        </motion.div>
+                  ) : (
+                    <Image
+                      className="object-cover"
+                      cloudName={import.meta.env.VITE_CLOUD_NAME}
+                      publicId={image}
+                      width="auto"
+                      height="150"
+                      crop="scale"
+                      alt="Profile"
+                    />
+                  )}
+                </motion.div>
+                <Upload
+                  customRequest={customRequest}
+                  accept="image/*"
+                  showUploadList={false}
+                >
+                  <Button className="flex items-center text-white justify-center text-base p-2 rounded-full absolute bottom-2 right-2">
+                    <CameraOutlined />
+                  </Button>
+                </Upload>
+              </motion.div>
+              <h2 className="mt-4 font-bold text-3xl">{userData?.name}</h2>
+              <p className="text-lg text-gray-300">{userData?.email}</p>
+            </div>
+            <div className="mt-4">
+              <label className="text-md font-medium">Email</label>
+              <Input
+                size="large"
+                value={userData?.email}
+                placeholder="Your Email"
+                className="mt-1 mb-5"
+                disabled
+              />
+              <Form className="flex flex-col gap-1" onFinish={onFinish}>
+                <Form.Item
+                  name="name"
+                  rules={[
+                    {
+                      pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
+                      message: "Please enter your name",
+                    },
+                    {
+                      validator: validateName,
+                    },
+                  ]}
+                >
+                  <label className="text-md font-medium">Name</label>
+                  <Input
+                    size="large"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Name"
+                    className="mt-1"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="phone"
+                  rules={[
+                    {
+                      pattern: /^\d{10}$/,
+                      message: "Phone number must be 10 digits",
+                    },
+                    {
+                      validator: validatePhone,
+                    },
+                  ]}
+                >
+                  <label className="text-md font-medium">Phone</label>
+                  <Input
+                    size="large"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Phone"
+                    className="mt-1"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="place"
+                  rules={[
+                    {
+                      pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
+                      message: "Place can't be empty",
+                    },
+                    {
+                      validator: validatePlace,
+                    },
+                  ]}
+                >
+                  <label className="text-md font-medium">Place</label>
+                  <Input
+                    size="large"
+                    value={place}
+                    onChange={(e) => setPlace(e.target.value)}
+                    placeholder="Place"
+                    className="mt-1"
+                  />
+                </Form.Item>
+                <Button
+                  size="large"
+                  className="text-white font-semibold"
+                  htmlType="submit"
+                >
+                  Update
+                </Button>
+              </Form>
+            </div>
+          </div>
+        </Card>
       </motion.section>
     </UserLayout>
   );
