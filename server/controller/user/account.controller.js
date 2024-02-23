@@ -17,8 +17,15 @@ const updateProfile = async (req, res, next) => {
     user.place = place;
     user.image = image;
     await user.save();
+    const userData = await userModel.findById(req.userId, {
+      password: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+    });
     res.status(200).json({
       success: true,
+      userData,
       message: "Profile Updated",
     });
   } catch (error) {

@@ -11,7 +11,7 @@ import { Form, Input, Button, Upload, Card } from "antd";
 import UserLayout from "../../components/layout/UserLayout";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
-import { getUser, updateProfile } from "../../api/services/userService";
+import { updateProfile } from "../../api/services/userService";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -36,11 +36,8 @@ function Profile() {
       const response = await updateProfile(updatedData);
       dispatch(hideLoading());
       if (response.data.success) {
-        const userResponse = await getUser();
-        setUserData(userResponse.data.userData);
-        const encodedUserData = btoa(
-          JSON.stringify(userResponse.data.userData)
-        );
+        setUserData(response.data.userData);
+        const encodedUserData = btoa(JSON.stringify(response.data.userData));
         localStorage.setItem("userData", encodedUserData);
         toast.success(response.data.message);
       } else {
