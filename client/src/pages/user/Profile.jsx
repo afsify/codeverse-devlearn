@@ -6,16 +6,19 @@ import { useDispatch } from "react-redux";
 import { cloudUpload } from "../../api/cloudinary";
 import { CameraOutlined } from "@ant-design/icons";
 import imageLinks from "../../assets/images/imageLinks";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import { Form, Input, Button, Upload, Card } from "antd";
 import UserLayout from "../../components/layout/UserLayout";
-import { updateProfile } from "../../api/services/userService";
+import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
+import { getUser, updateProfile } from "../../api/services/userService";
 
 function Profile() {
   const dispatch = useDispatch();
   const encodedUserData = localStorage.getItem("userData");
-  const userData = encodedUserData ? JSON.parse(atob(encodedUserData)) : null;
+  const decoded = encodedUserData ? JSON.parse(atob(encodedUserData)) : null;
   const [uploading, setUploading] = useState(false);
+  const [userData, setUserData] = useState(decoded);
   const [name, setName] = useState(userData?.name || "");
   const [phone, setPhone] = useState(userData?.phone || "");
   const [place, setPlace] = useState(userData?.place || "");
@@ -33,6 +36,12 @@ function Profile() {
       const response = await updateProfile(updatedData);
       dispatch(hideLoading());
       if (response.data.success) {
+        const userResponse = await getUser();
+        setUserData(userResponse.data.userData);
+        const encodedUserData = btoa(
+          JSON.stringify(userResponse.data.userData)
+        );
+        localStorage.setItem("userData", encodedUserData);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -146,7 +155,25 @@ function Profile() {
                   </Button>
                 </Upload>
               </motion.div>
-              <h2 className="mt-4 font-bold text-3xl">{userData?.name}</h2>
+              <h2 className="mt-4 font-bold text-3xl">
+                <span>
+                  {userData?.name}
+                  {userData?.developer ? (
+                    <TokenRoundedIcon
+                      className="ml-1 mb-2"
+                      sx={{ fontSize: 24, color: "green" }}
+                    />
+                  ) : userData?.prime ? (
+                    <VerifiedIcon
+                      className="ml-1 mb-2"
+                      color="primary"
+                      sx={{ fontSize: 24 }}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </span>
+              </h2>
               <p className="text-lg text-gray-300">{userData?.email}</p>
             </div>
             <div className="mt-4">
@@ -158,20 +185,28 @@ function Profile() {
                 className="mt-1 mb-5"
                 disabled
               />
-              <Form className="flex flex-col gap-1" onFinish={onFinish}>
+              <Form
+                className="flex flex-col"
+                onFinish={onFinish}
+                initialValues={{
+                  name: userData?.name || "",
+                  phone: userData?.phone || "",
+                  place: userData?.place || "",
+                }}
+              >
+                <label className="text-md font-medium">Name</label>
                 <Form.Item
                   name="name"
                   rules={[
                     {
                       pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
-                      message: "Please enter your name",
+                      message: "Enter a valid name",
                     },
                     {
                       validator: validateName,
                     },
                   ]}
                 >
-                  <label className="text-md font-medium">Name</label>
                   <Input
                     size="large"
                     value={name}
@@ -180,6 +215,7 @@ function Profile() {
                     className="mt-1"
                   />
                 </Form.Item>
+                <label className="text-md font-medium">Phone</label>
                 <Form.Item
                   name="phone"
                   rules={[
@@ -192,7 +228,6 @@ function Profile() {
                     },
                   ]}
                 >
-                  <label className="text-md font-medium">Phone</label>
                   <Input
                     size="large"
                     value={phone}
@@ -201,19 +236,19 @@ function Profile() {
                     className="mt-1"
                   />
                 </Form.Item>
+                <label className="text-md font-medium">Place</label>
                 <Form.Item
                   name="place"
                   rules={[
                     {
                       pattern: /^(?=.*[A-Za-z])[A-Za-z\s]+$/,
-                      message: "Place can't be empty",
+                      message: "Enter a valid place",
                     },
                     {
                       validator: validatePlace,
                     },
                   ]}
                 >
-                  <label className="text-md font-medium">Place</label>
                   <Input
                     size="large"
                     value={place}
