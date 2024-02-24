@@ -41,7 +41,7 @@ function BannerForm({ visible, onCreate, onCancel, editData }) {
         )}
       </div>
       <div className="flex justify-center">
-        <Button className="flex items-center justify-center p-2">
+        <Button className="flex items-center text-white justify-center p-2">
           <FileImageOutlined />
           Upload Image
         </Button>
@@ -100,6 +100,7 @@ function BannerForm({ visible, onCreate, onCancel, editData }) {
       cancelText="Cancel"
       onCancel={onCancel}
       onOk={handleSubmit}
+      cancelButtonProps={{ style: { color: 'white' } }}
     >
       <Upload.Dragger
         customRequest={({ file }) => handleUpload(file)}

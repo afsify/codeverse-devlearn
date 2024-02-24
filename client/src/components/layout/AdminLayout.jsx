@@ -99,23 +99,23 @@ function AdminLayout({ children }) {
             open ? "w-72" : "w-20 "
           } bg-dark-purple my-2 rounded-xl p-5 pt-8 relative shadow-black shadow-md duration-300`}
         >
+          <div className="absolute left-4 top-4">
+            <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
+          </div>
           <LeftCircleFilled
             style={{ fontSize: "35px", color: "#081A51" }}
             className={`absolute bg-white hover:scale-105 transition-transform cursor-pointer -right-4 top-12
            border-2 rounded-full ${!open && "rotate-180"}`}
             onClick={() => setOpen(!open)}
           />
-          <div className="flex items-center">
+          <div className="mt-3">
             <h1
-              className={`text-white text-5xl font-signature duration-500 ${
+              className={`text-white text-5xl font-signature text-center duration-500 ${
                 !open && "rotate-[360deg] scale-0"
               }`}
             >
               Codeverse
             </h1>
-          </div>
-          <div className="flex justify-center mt-2">
-            <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
           </div>
           <ul>
             {adminMenu.map((menu) => {
@@ -126,7 +126,7 @@ function AdminLayout({ children }) {
                   className={`${
                     !open && "flex justify-center mt-4"
                   } flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-lg items-center gap-x-4
-              ${menu.gap ? "mt-9" : "mt-2"} ${
+                    ${menu.gap ? "mt-9" : "mt-2"} ${
                     isActive && " bg-light-white font-semibold"
                   } `}
                   onClick={() => navigate(menu.path)}
@@ -158,9 +158,12 @@ function AdminLayout({ children }) {
           </ul>
         </div>
       </aside>
-      <main className="w-full p-2 overflow-y-scroll h-screen">{children}</main>
+      <main className="w-full p-2 h-screen">{children}</main>
       {nav && (
         <div className="flex top-0 bottom-0 left-0 w-full p-3 fixed z-40">
+          <div className="fixed right-8 top-8">
+            <Switcher isDarkTheme={isDarkTheme} handleChange={handleChange} />
+          </div>
           <ul className="flex flex-col justify-center items-center rounded-xl w-full shadow-black shadow-md bg-dark-purple ">
             {adminMenu.map((menu) => {
               const isActive = location.pathname === menu.path;

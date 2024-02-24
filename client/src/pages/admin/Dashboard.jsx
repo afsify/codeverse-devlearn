@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Title from "../../components/admin/Title";
 import imageLinks from "../../assets/images/imageLinks";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { Layout, Row, Col, Card, Statistic, Table } from "antd";
+import { Row, Col, Card, Statistic, Table } from "antd";
 import { listDashboard } from "../../api/services/adminService";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
@@ -12,8 +12,6 @@ import {
   BarChartOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-
-const { Content } = Layout;
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -88,7 +86,7 @@ function Dashboard() {
       <Title>
         <h2 className="text-xl font-semibold">Dashboard</h2>
       </Title>
-      <Content className="mt-5 mb-20">
+      <div className="mt-5">
         <Row gutter={16}>
           <Col xs={24} sm={16} md={16} lg={16} xl={16}>
             <Card
@@ -188,7 +186,7 @@ function Dashboard() {
               </Row>
             </Card>
             <Card
-              className="shadow-sm shadow-black mb-4 pb-3"
+              className="shadow-sm shadow-black pb-2"
             >
               <Row gutter={16}>
                 <Col span={12}>
@@ -209,7 +207,7 @@ function Dashboard() {
             </Card>
           </Col>
         </Row>
-      </Content>
+      </div>
     </AdminLayout>
   );
 }

@@ -2,14 +2,16 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import Title from "../../components/admin/Title";
-import { Button, Empty, Modal, Switch } from "antd";
+import { Button, Empty, Modal, Switch, Table, Input } from "antd";
 import BannerForm from "../../components/admin/BannerForm";
 import AdminLayout from "../../components/layout/AdminLayout";
 import { hideLoading, showLoading } from "../../utils/alertSlice";
 import {
   EditOutlined,
   DeleteOutlined,
+  SearchOutlined,
   PlusCircleOutlined,
+  CloseCircleOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import {
@@ -20,11 +22,14 @@ import {
   deleteBanner,
 } from "../../api/services/adminService";
 
+const { confirm } = Modal;
+
 function BannerManage() {
   const dispatch = useDispatch();
   const [size] = useState("large");
   const [banners, setBanners] = useState([]);
   const [editData, setEditData] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
@@ -141,7 +146,110 @@ function BannerManage() {
     setEditData(null);
   };
 
-  const { confirm } = Modal;
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      width: "20%",
+      align: "center",
+      render: (text, record) => (
+        <img src={record.image} alt={record.title} className="rounded-lg" />
+      ),
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      align: "center",
+      filterDropdown: () => (
+        <Input
+          size="large"
+          placeholder="Search Title"
+          value={searchInput}
+          className="rounded-md w-44"
+          onChange={(e) => setSearchInput(e.target.value)}
+          prefix={
+            <SearchOutlined style={{ color: "#1890ff", marginRight: "5px" }} />
+          }
+          suffix={
+            searchInput && (
+              <CloseCircleOutlined
+                style={{ color: "#1890ff", cursor: "pointer" }}
+                onClick={() => setSearchInput("")}
+              />
+            )
+          }
+        />
+      ),
+      filterIcon: () => (
+        <SearchOutlined
+          style={{ color: searchInput ? "#1890ff" : undefined }}
+        />
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+      width: "30%",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text, record) => (
+        <Switch
+          className="bg-light-purple"
+          checked={record.status}
+          onChange={() => toggleBannerStatus(record._id, record.status)}
+        />
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="md:space-x-1 space-y-1">
+          <Button
+            className="text-white"
+            icon={<EditOutlined />}
+            size={size}
+            onClick={() =>
+              editBannerHandler(
+                record._id,
+                record.image,
+                record.title,
+                record.description,
+                record.link
+              )
+            }
+          />
+          <Button
+            className="text-white"
+            icon={<DeleteOutlined />}
+            size={size}
+            onClick={() => showDeleteConfirm(record._id)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const filteredData = banners.filter((record) =>
+    record.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const showDeleteConfirm = (bannerId) => {
     confirm({
@@ -168,93 +276,24 @@ function BannerManage() {
           Add Banner
         </Button>
       </Title>
-      <div className="overflow-x-auto rounded-xl mt-5">
-        <table className="w-full table-auto border-collapse border border-gray-300 shadow-md shadow-black">
-          <thead className="bg-dark-purple text-white">
-            <tr>
-              <th className="text-center border border-gray-300 py-2">#</th>
-              <th className="text-center border border-gray-300">Image</th>
-              <th className="text-center border border-gray-300 py-2">Title</th>
-              <th className="text-center border border-gray-300 py-2">
-                Description
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Status
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {banners.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="text-center py-14">
-                  <div className="flex justify-center items-center h-full">
-                    <Empty
-                      description={
-                        <span className="text-lg text-gray-500">
-                          No banners available.
-                        </span>
-                      }
-                    />
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              banners.map((banner, index) => (
-                <tr key={banner._id} className="bg-gray-100 hover:bg-gray-200">
-                  <td className="text-center border border-gray-300 py-2 px-2">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-300 flex justify-center">
-                    <img
-                      src={banner.image}
-                      alt={banner.title}
-                      width="200"
-                      className="rounded-lg"
-                    />
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    {banner.title}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 max-w-md">
-                    {banner.description}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    <Switch
-                      className="bg-light-purple"
-                      checked={banner.status}
-                      onChange={() =>
-                        toggleBannerStatus(banner._id, banner.status)
-                      }
-                    />
-                  </td>
-                  <td className="text-center border border-gray-300">
-                    <Button
-                      icon={<EditOutlined />}
-                      size={size}
-                      onClick={() =>
-                        editBannerHandler(
-                          banner._id,
-                          banner.image,
-                          banner.title,
-                          banner.description,
-                          banner.link
-                        )
-                      }
-                    />
-                    <Button
-                      icon={<DeleteOutlined />}
-                      size={size}
-                      onClick={() => showDeleteConfirm(banner._id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="overflow-x-auto mt-5">
+        <Table
+          dataSource={filteredData}
+          columns={columns}
+          pagination={{ position: ["bottomCenter"], pageSize: 4 }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={
+                  <span className="text-lg text-gray-500">
+                    No banners available.
+                  </span>
+                }
+              />
+            ),
+          }}
+          bordered
+        />
       </div>
       <BannerForm
         visible={isModalVisible}
