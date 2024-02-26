@@ -1,18 +1,20 @@
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useEdit from "../../hooks/useEdit";
+import useFetch from "../../hooks/useFetch";
+import useInsert from "../../hooks/useInsert";
+import useToggle from "../../hooks/useToggle";
+import useDelete from "../../hooks/useDelete";
 import Title from "../../components/admin/Title";
-import { Button, Empty, Modal, Switch, Table, Input } from "antd";
+import { Button, Empty, Switch, Table, Input } from "antd";
 import BannerForm from "../../components/admin/BannerForm";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
+import DeleteConfirm from "../../components/admin/DeleteConfirm";
 import {
   EditOutlined,
   DeleteOutlined,
   SearchOutlined,
   PlusCircleOutlined,
   CloseCircleOutlined,
-  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import {
   listBanner,
@@ -22,120 +24,49 @@ import {
   deleteBanner,
 } from "../../api/services/adminService";
 
-const { confirm } = Modal;
-
 function BannerManage() {
-  const dispatch = useDispatch();
   const [size] = useState("large");
-  const [banners, setBanners] = useState([]);
   const [editData, setEditData] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        dispatch(showLoading());
-        const response = await listBanner();
-        dispatch(hideLoading());
-        const bannerData = response.data.data;
-        setBanners(bannerData);
-      } catch (error) {
-        dispatch(hideLoading());
-        console.error("Error fetching banners:", error);
-        setBanners([]);
-      }
-    };
-    fetchBanners();
-  }, [dispatch]);
+  const { data: banner, setData: setBanner } = useFetch(listBanner);
+  const { insertItem } = useInsert(insertBanner, setBanner, setIsModalVisible);
+  const { editItem } = useEdit(editBanner, setBanner, setIsModalVisible);
+  const { toggleStatus } = useToggle(bannerStatus, setBanner);
+  const { deleteItem } = useDelete(deleteBanner, setBanner);
 
   const insertBannerHandler = async (formData) => {
-    try {
-      dispatch(showLoading());
-      const response = await insertBanner(formData);
-      dispatch(hideLoading());
-      if (response.data.success) {
-        const newBanner = response.data.savedBanner;
-        setBanners([...banners, newBanner]);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+    insertItem(formData);
   };
 
-  const editBannerHandler = (bannerId, image, title, description, link) => {
+  const showEditWindow = (bannerId, image, title, description, link) => {
     const bannerToEdit = {
       _id: bannerId,
       image: image,
       title: title,
-      description: description,
       link: link,
+      description: description,
     };
     setEditData(bannerToEdit);
     showModal();
   };
 
-  const editExistingBannerHandler = async (formData) => {
-    try {
-      const response = await editBanner(editData._id, formData);
-      if (response.data.success) {
-        const updatedBanner = response.data.savedBanner;
-        const updatedBanners = banners.map((banner) =>
-          banner._id === updatedBanner._id ? updatedBanner : banner
-        );
-        setBanners(updatedBanners);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+  const editBannerHandler = async (formData) => {
+    editItem(editData._id, formData);
   };
 
   const toggleBannerStatus = async (bannerId, currentStatus) => {
-    try {
-      const newStatus = !currentStatus;
-      const response = await bannerStatus(bannerId, newStatus);
-      if (response.data.success) {
-        const updatedBannersResponse = await listBanner();
-        const updatedBannersData = updatedBannersResponse.data;
-        setBanners(updatedBannersData);
-        toast.success(response.data.message);
-        const updatedBanners = banners.map((banner) =>
-          banner._id === bannerId ? { ...banner, status: newStatus } : banner
-        );
-        setBanners(updatedBanners);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+    toggleStatus(bannerId, currentStatus);
   };
 
   const deleteBannerHandler = async (bannerId) => {
-    try {
-      const response = await deleteBanner(bannerId);
-      if (response.data.success) {
-        const updatedBanners = banners.filter(
-          (banner) => banner._id !== bannerId
-        );
-        setBanners(updatedBanners);
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    deleteItem(bannerId);
   };
+
+  const filteredData = banner.filter((record) =>
+    record.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -144,6 +75,13 @@ function BannerManage() {
   const handleCancel = () => {
     setIsModalVisible(false);
     setEditData(null);
+  };
+
+  const showDeleteConfirm = (bannerId) => {
+    const handleDelete = (bannerId) => {
+      deleteBannerHandler(bannerId);
+    };
+    DeleteConfirm(handleDelete, bannerId);
   };
 
   const columns = [
@@ -227,7 +165,7 @@ function BannerManage() {
             icon={<EditOutlined />}
             size={size}
             onClick={() =>
-              editBannerHandler(
+              showEditWindow(
                 record._id,
                 record.image,
                 record.title,
@@ -246,26 +184,6 @@ function BannerManage() {
       ),
     },
   ];
-
-  const filteredData = banners.filter((record) =>
-    record.title.toLowerCase().includes(searchInput.toLowerCase())
-  );
-
-  const showDeleteConfirm = (bannerId) => {
-    confirm({
-      title: "Are you sure you want to delete this banner?",
-      icon: <ExclamationCircleOutlined />,
-      content: "This action cannot be undone.",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      centered: true,
-      onOk() {
-        deleteBannerHandler(bannerId);
-      },
-      onCancel() {},
-    });
-  };
 
   return (
     <AdminLayout>
@@ -297,7 +215,7 @@ function BannerManage() {
       </div>
       <BannerForm
         visible={isModalVisible}
-        onCreate={editData ? editExistingBannerHandler : insertBannerHandler}
+        onCreate={editData ? editBannerHandler : insertBannerHandler}
         onCancel={handleCancel}
         editData={editData}
       />

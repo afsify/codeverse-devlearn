@@ -183,11 +183,11 @@ const unblockUser = async (req, res, next) => {
 
 const listFeedback = async (req, res, next) => {
   try {
-    const feedbacks = await contactModel.find({});
+    const feedback = await contactModel.find({});
     res.status(200).json({
-      message: "Feedbacks Fetched",
+      message: "Feedback Fetched",
       success: true,
-      data: feedbacks,
+      data: feedback,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });

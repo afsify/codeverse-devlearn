@@ -4,11 +4,11 @@ const bannerModel = require("../../model/banner.model");
 
 const listBanner = async (req, res, next) => {
   try {
-    const banners = await bannerModel.find({});
+    const banner = await bannerModel.find({});
     res.status(200).json({
       message: "Banners Fetched",
       success: true,
-      data: banners,
+      data: banner,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
@@ -37,7 +37,7 @@ const insertBanner = async (req, res, next) => {
     res.status(200).json({
       message: "Banner Created",
       success: true,
-      savedBanner,
+      data: savedBanner,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
@@ -64,7 +64,7 @@ const editBanner = async (req, res, next) => {
     const savedBanner = await banner.save();
     res
       .status(200)
-      .json({ success: true, message: "Banner Updated", savedBanner });
+      .json({ success: true, message: "Banner Updated", data: savedBanner });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
     next(error);
@@ -83,8 +83,10 @@ const bannerStatus = async (req, res, next) => {
         .json({ success: false, message: "Banner not Found" });
     }
     banner.status = !banner.status;
-    await banner.save();
-    res.status(200).json({ success: true, message: "Status Updated" });
+    const savedBanner = await banner.save();
+    res
+      .status(200)
+      .json({ success: true, message: "Status Updated", data: savedBanner });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
     next(error);

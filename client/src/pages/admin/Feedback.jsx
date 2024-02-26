@@ -1,33 +1,13 @@
-import { Button, Table, Card } from "antd";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { Button, Table } from "antd";
+import useFetch from "../../hooks/useFetch";
 import Title from "../../components/admin/Title";
 import { adminPath } from "../../routes/routeConfig";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
 import { listFeedback } from "../../api/services/adminService";
 import { VideoCameraOutlined } from "@ant-design/icons";
 
 function Feedback() {
-  const dispatch = useDispatch();
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const fetchFeedback = async () => {
-      try {
-        dispatch(showLoading());
-        const response = await listFeedback();
-        dispatch(hideLoading());
-        const feedback = response.data.data;
-        setMessages(feedback);
-      } catch (error) {
-        dispatch(hideLoading());
-        console.error("Error fetching users:", error);
-        setMessages([]);
-      }
-    };
-    fetchFeedback();
-  }, [dispatch]);
+  const { data: feedback } = useFetch(listFeedback);
 
   const columns = [
     {
@@ -78,15 +58,15 @@ function Feedback() {
           Go Live
         </Button>
       </Title>
-      <Card className="shadow-sm shadow-black mb-4 mt-5">
+      <div className="overflow-x-auto mt-5">
         <Table
-          className="overflow-y-scroll"
-          dataSource={messages}
+          dataSource={feedback}
           columns={columns}
-          pagination={false}
+          pagination={{ position: ["bottomCenter"], pageSize: 4 }}
           rowKey="_id"
+          bordered
         />
-      </Card>
+      </div>
     </AdminLayout>
   );
 }
