@@ -63,7 +63,7 @@ function Signin() {
       <p className="text-sm mt-3 text-dark-purple">
         Signin as admin to access admin panel
       </p>
-      <Form className="flex flex-col mt-3" onFinish={onFinish}>
+      <Form className="flex flex-col mt-4" onFinish={onFinish}>
         <Form.Item
           name="email"
           rules={[
@@ -79,7 +79,7 @@ function Signin() {
               placeholder="Email"
               className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
             />
-            <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+            <span className="text-opacity-80 absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
               Email
             </span>
           </label>

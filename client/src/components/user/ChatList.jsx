@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import { Skeleton, Menu, Dropdown } from "antd";
+import { Skeleton, Menu, Dropdown, Typography } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import imageLinks from "../../assets/images/imageLinks";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 
+const { Title } = Typography;
 function ChatList({
   chatData,
   userData,
@@ -81,7 +82,11 @@ function ChatList({
                   </div>
                 )}
                 <div>
-                  <h1 className="text-md font-semibold capitalize text-gray-700">
+                  <Title
+                    className=" capitalize"
+                    level={5}
+                    style={{ margin: 0, padding: 0 }}
+                  >
                     {skeleton ? (
                       <Skeleton.Input style={{ width: 100 }} active />
                     ) : chat.isGroupChat ? (
@@ -105,7 +110,7 @@ function ChatList({
                         )}
                       </span>
                     )}
-                  </h1>
+                  </Title>
                   {chat.latestMessage && (
                     <p className="text-gray-500 font-sans text-sm">
                       {skeleton ? (

@@ -4,8 +4,8 @@ import imageLinks from "../../assets/images/imageLinks";
 
 function AuthCard({ children }) {
   return (
-    <section className="min-h-screen flex items-center bg-gray-100 justify-center">
-      <div className="flex rounded-2xl shadow-2xl max-w-4xl bg-white p-5 m-1 items-center">
+    <section className="min-h-screen flex items-center justify-center">
+      <div className="flex rounded-2xl shadow-2xl max-w-4xl p-5 m-1 items-center">
         <div className="md:w-1/2 px-8 md:px-14">{children}</div>
         <div className="md:flex hidden w-1/2">
           {imageLinks?.auth ? (

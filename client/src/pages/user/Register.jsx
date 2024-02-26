@@ -44,7 +44,7 @@ function Register() {
       <p className="text-sm mt-3 text-dark-purple">
         Create your free account and get started
       </p>
-      <Form className="flex flex-col mt-3" onFinish={onFinish} form={form}>
+      <Form className="flex flex-col mt-4" onFinish={onFinish} form={form}>
         <Form.Item
           name="name"
           rules={[
@@ -63,7 +63,7 @@ function Register() {
               placeholder="Name"
               className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
             />
-            <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+            <span className="text-opacity-80 absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
               Name
             </span>
           </label>
@@ -83,7 +83,7 @@ function Register() {
               placeholder="Email"
               className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
             />
-            <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+            <span className="text-opacity-80 absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
               Email
             </span>
           </label>

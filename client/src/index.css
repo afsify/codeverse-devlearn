@@ -29,26 +29,21 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #354c87;
+  background-color: #081a51;
   border-radius: 18px;
   min-width: 20px;
   min-height: 20px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #132b68;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #d3d3d3;
-  border-radius: 18px;
-}
-
-::-webkit-scrollbar-track:hover {
-  background-color: #c0c0c0;
+  background-color: #2563eb;
 }
 
 input[type="text"]:focus ~ .input-text,
 input[type="text"]:not(:placeholder-shown) ~ .input-text {
-  @apply text-blue-500 text-lg transform -translate-y-6 -translate-x-1 scale-75;
+  @apply text-blue-500 text-lg transform -translate-y-8 -translate-x-1 scale-75;
+}
+
+.custom-dropdown .ant-dropdown-menu-item:hover {
+  background-color: transparent !important;
 }

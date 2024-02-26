@@ -198,6 +198,7 @@ function BannerManage() {
         <Table
           dataSource={filteredData}
           columns={columns}
+          bordered
           pagination={{ position: ["bottomCenter"], pageSize: 4 }}
           locale={{
             emptyText: (
@@ -210,7 +211,6 @@ function BannerManage() {
               />
             ),
           }}
-          bordered
         />
       </div>
       <BannerForm

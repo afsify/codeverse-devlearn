@@ -132,6 +132,7 @@ const GroupModal = ({ visible, onCreate, onCancel, editData }) => {
       onCancel={onCancel}
       onOk={handleSubmit}
       centered
+      cancelButtonProps={{ style: { color: 'white' } }}
     >
       <Form form={form} layout="vertical">
         <Form.Item

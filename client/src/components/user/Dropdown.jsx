@@ -7,38 +7,22 @@ import { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import imageLinks from "../../assets/images/imageLinks";
-import { listOrder } from "../../api/services/userService";
 import { useLocation, useNavigate } from "react-router-dom";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { selectIsDarkTheme, toggleTheme } from "../../utils/themeSlice";
 import {
   UserOutlined,
-  MessageOutlined,
-  PlaySquareOutlined,
+  HomeOutlined,
   LogoutOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 
 function Dropdown() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userData, setUserData] = useState(null);
-  const [userOrders, setUserOrders] = useState([]);
   const isDarkTheme = useSelector(selectIsDarkTheme);
   const logged = localStorage.getItem("userToken") !== null;
-
-  useEffect(() => {
-    const fetchUserOrders = async () => {
-      try {
-        const response = await listOrder();
-        const userOrderData = response.data.data;
-        setUserOrders(userOrderData);
-      } catch (error) {
-        console.error("Error fetching user orders:", error);
-        setUserOrders([]);
-      }
-    };
-    fetchUserOrders();
-  }, [dispatch]);
 
   useEffect(() => {
     if (logged) {
@@ -86,6 +70,11 @@ function Dropdown() {
           </div>
           <ul className="mt-2 space-y-2">
             <DropdownItem
+              text="Home"
+              icon={<HomeOutlined />}
+              path={userPath?.home}
+            />
+            <DropdownItem
               text="My Profile"
               icon={<UserOutlined />}
               path={userPath?.profile}
@@ -95,13 +84,6 @@ function Dropdown() {
               icon={<MessageOutlined />}
               path={userPath?.messages}
             />
-            {userOrders?.length > 0 && (
-              <DropdownItem
-                text="Library"
-                icon={<PlaySquareOutlined />}
-                path={userPath?.library}
-              />
-            )}
             <li
               onClick={() => {
                 localStorage.removeItem("userToken");
@@ -133,6 +115,7 @@ function Dropdown() {
           }}
           trigger={["click"]}
           placement="bottomRight"
+          overlayClassName="custom-dropdown"
         >
           <div className="cursor-pointer hover:scale-110 duration-300">
             <div className="overflow-hidden rounded-full w-11 h-11 mx-auto shadow-md shadow-black ">

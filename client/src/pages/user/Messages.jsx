@@ -1,18 +1,18 @@
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Name from "../../components/user/Name";
 import { useLocation } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 import ChatList from "../../components/user/ChatList";
+import Dropdown from "../../components/user/Dropdown";
 import imageLinks from "../../assets/images/imageLinks";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import ChatWindow from "../../components/user/ChatWindow";
 import GroupModal from "../../components/user/GroupModal";
-import ProfileMenu from "../../components/user/ProfileMenu";
 import DefaultWindow from "../../components/user/DefaultWindow";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import { Button, Tooltip, List, AutoComplete, Skeleton } from "antd";
-import { motion } from "framer-motion";
 import {
   findUser,
   editGroup,
@@ -33,7 +33,6 @@ const Messages = () => {
   const [notification, setNotification] = useState([]);
   const [isGroupModalVisible, setGroupModalVisible] = useState(false);
   const [isAccountModalVisible, setAccountModalVisible] = useState(false);
-  const logged = localStorage.getItem("userToken") !== null;
   const encodedUserData = localStorage.getItem("userData");
   const userData = encodedUserData ? JSON.parse(atob(encodedUserData)) : null;
 
@@ -195,7 +194,7 @@ const Messages = () => {
         transition={{ duration: 0.5 }}
         className={`${
           selectedChat && "hidden md:flex"
-        } flex w-full md:w-80 h-screen bg-gray-100 relative`}
+        } flex w-full md:w-80 h-screen relative`}
       >
         <motion.div
           animate={{ y: 0, opacity: 1 }}
@@ -213,7 +212,7 @@ const Messages = () => {
               style={{ maxWidth: "100%" }}
               allowClear
             />
-            <ProfileMenu userData={userData} logged={logged} />
+            <Dropdown />
           </Name>
           <ChatList
             chatData={chatData}
@@ -231,7 +230,7 @@ const Messages = () => {
             onClick={showModal}
             size="large"
             shape="circle"
-            className="absolute bottom-5 right-5 z-40 hover:scale-105 shadow-md shadow-black"
+            className="absolute bottom-5 text-white right-5 z-40 hover:scale-105 shadow-md shadow-black"
             icon={<PlusOutlined />}
           ></Button>
         </Tooltip>

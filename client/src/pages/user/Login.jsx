@@ -4,11 +4,11 @@ import { useDispatch } from "react-redux";
 import { Button, Form, Input } from "antd";
 import { GoogleLogin } from "@react-oauth/google";
 import { userActions } from "../../utils/userSlice";
+import { userPath } from "../../routes/routeConfig";
 import { Link, useNavigate } from "react-router-dom";
 import AuthCard from "../../components/auth/AuthCard";
 import { getUser } from "../../api/services/userService";
 import { userLogin } from "../../api/services/userService";
-import { userPath } from "../../routes/routeConfig";
 import { showLoading, hideLoading } from "../../utils/alertSlice";
 
 function Login() {
@@ -106,7 +106,7 @@ function Login() {
       <p className="text-sm mt-3 text-dark-purple">
         If you are already a member, easily log in
       </p>
-      <Form rm className="flex flex-col mt-3" onFinish={onFinish}>
+      <Form rm className="flex flex-col mt-4" onFinish={onFinish}>
         <Form.Item
           name="email"
           rules={[
@@ -122,7 +122,7 @@ function Login() {
               placeholder="Email"
               className="p-2 placeholder-gray-300 placeholder-opacity-0 transition duration-200"
             />
-            <span className="text-opacity-80 bg-white absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
+            <span className="text-opacity-80 absolute left-2 top-0 px-1 transition text-gray-400 duration-200 input-text">
               Email
             </span>
           </label>
