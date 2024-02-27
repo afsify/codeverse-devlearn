@@ -1,16 +1,20 @@
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useEdit from "../../hooks/useEdit";
+import useFetch from "../../hooks/useFetch";
+import useInsert from "../../hooks/useInsert";
+import useToggle from "../../hooks/useToggle";
+import useDelete from "../../hooks/useDelete";
 import Title from "../../components/admin/Title";
-import { Button, Empty, Modal, Switch } from "antd";
+import { Button, Empty, Switch, Table, Input } from "antd";
 import ServiceForm from "../../components/admin/ServiceForm";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
+import DeleteConfirm from "../../components/admin/DeleteConfirm";
 import {
   EditOutlined,
   DeleteOutlined,
+  SearchOutlined,
   PlusCircleOutlined,
-  ExclamationCircleOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import {
   listService,
@@ -21,118 +25,45 @@ import {
 } from "../../api/services/adminService";
 
 function ServiceManage() {
-  const dispatch = useDispatch();
   const [size] = useState("large");
-  const [services, setServices] = useState([]);
   const [editData, setEditData] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        dispatch(showLoading());
-        const response = await listService();
-        dispatch(hideLoading());
-        const serviceData = response.data.data;
-        setServices(serviceData);
-      } catch (error) {
-        dispatch(hideLoading());
-        console.error("Error fetching services:", error);
-        setServices([]);
-      }
-    };
-    fetchServices();
-  }, [dispatch]);
+  const { data: service, setData: setService } = useFetch(listService);
+  const { editItem } = useEdit(editService, setService, setIsModalVisible);
+  const { toggleStatus } = useToggle(serviceStatus, setService);
+  const { deleteItem } = useDelete(deleteService, setService);
+  const { insertItem } = useInsert(
+    insertService,
+    setService,
+    setIsModalVisible
+  );
 
   const insertServiceHandler = async (formData) => {
-    try {
-      dispatch(showLoading());
-      const response = await insertService(formData);
-      dispatch(hideLoading());
-      if (response.data.success) {
-        const newService = response.data.savedService;
-        setServices([...services, newService]);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+    insertItem(formData);
   };
 
-  const editServiceHandler = (serviceId, image, title, description, link) => {
-    const serviceToEdit = {
-      _id: serviceId,
-      image: image,
-      title: title,
-      description: description,
-      link: link,
-    };
+  const showEditWindow = (serviceToEdit) => {
     setEditData(serviceToEdit);
     showModal();
   };
 
-  const editExistingServiceHandler = async (formData) => {
-    try {
-      const response = await editService(editData._id, formData);
-      if (response.data.success) {
-        const updatedService = response.data.savedService;
-        const updatedServices = services.map((service) =>
-          service._id === updatedService._id ? updatedService : service
-        );
-        setServices(updatedServices);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+  const editServiceHandler = async (formData) => {
+    editItem(editData._id, formData);
   };
 
   const toggleServiceStatus = async (serviceId, currentStatus) => {
-    try {
-      const newStatus = !currentStatus;
-      const response = await serviceStatus(serviceId, newStatus);
-      if (response.data.success) {
-        const updatedServicesResponse = await listService();
-        const updatedServicesData = updatedServicesResponse.data;
-        setServices(updatedServicesData);
-        toast.success(response.data.message);
-        const updatedServices = services.map((service) =>
-          service._id === serviceId
-            ? { ...service, status: newStatus }
-            : service
-        );
-        setServices(updatedServices);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+    toggleStatus(serviceId, currentStatus);
   };
 
   const deleteServiceHandler = async (serviceId) => {
-    try {
-      const response = await deleteService(serviceId);
-      if (response.data.success) {
-        const updatedServices = services.filter(
-          (service) => service._id !== serviceId
-        );
-        setServices(updatedServices);
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    deleteItem(serviceId);
   };
+
+  const filteredData = service.filter((record) =>
+    record.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -143,23 +74,105 @@ function ServiceManage() {
     setEditData(null);
   };
 
-  const { confirm } = Modal;
-
   const showDeleteConfirm = (serviceId) => {
-    confirm({
-      title: "Are you sure you want to delete this service?",
-      icon: <ExclamationCircleOutlined />,
-      content: "This action cannot be undone.",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      centered: true,
-      onOk() {
-        deleteServiceHandler(serviceId);
-      },
-      onCancel() {},
-    });
+    const handleDelete = (serviceId) => {
+      deleteServiceHandler(serviceId);
+    };
+    DeleteConfirm(handleDelete, serviceId);
   };
+
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      width: "20%",
+      align: "center",
+      render: (text, record) => (
+        <img src={record.image} alt={record.title} className="rounded-lg" />
+      ),
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      align: "center",
+      filterDropdown: () => (
+        <Input
+          size="large"
+          placeholder="Search Title"
+          value={searchInput}
+          className="rounded-md w-44"
+          onChange={(e) => setSearchInput(e.target.value)}
+          prefix={
+            <SearchOutlined style={{ color: "#1890ff", marginRight: "5px" }} />
+          }
+          suffix={
+            searchInput && (
+              <CloseCircleOutlined
+                style={{ color: "#1890ff", cursor: "pointer" }}
+                onClick={() => setSearchInput("")}
+              />
+            )
+          }
+        />
+      ),
+      filterIcon: () => (
+        <SearchOutlined
+          style={{ color: searchInput ? "#1890ff" : undefined }}
+        />
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+      width: "30%",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text, record) => (
+        <Switch
+          className="bg-light-purple"
+          checked={record.status}
+          onChange={() => toggleServiceStatus(record._id, record.status)}
+        />
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="md:space-x-1 space-y-1">
+          <Button
+            className="text-white"
+            icon={<EditOutlined />}
+            size={size}
+            onClick={() => showEditWindow(record)}
+          />
+          <Button
+            className="text-white"
+            icon={<DeleteOutlined />}
+            size={size}
+            onClick={() => showDeleteConfirm(record._id)}
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <AdminLayout>
@@ -170,97 +183,28 @@ function ServiceManage() {
           Add Service
         </Button>
       </Title>
-      <div className="overflow-x-auto rounded-xl mt-5">
-        <table className="w-full table-auto border-collapse border border-gray-300 shadow-md shadow-black">
-          <thead className="bg-dark-purple text-white">
-            <tr>
-              <th className="text-center border border-gray-300 py-2">#</th>
-              <th className="text-center border border-gray-300">Image</th>
-              <th className="text-center border border-gray-300 py-2">Title</th>
-              <th className="text-center border border-gray-300 py-2">
-                Description
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Status
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {services.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="text-center py-14">
-                  <div className="flex justify-center items-center h-full">
-                    <Empty
-                      description={
-                        <span className="text-lg text-gray-500">
-                          No services available.
-                        </span>
-                      }
-                    />
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              services.map((service, index) => (
-                <tr key={service._id} className="bg-gray-100 hover:bg-gray-200">
-                  <td className="text-center border border-gray-300 py-2 px-2">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-300 flex justify-center">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      width="200"
-                      className="rounded-lg"
-                    />
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    {service.title}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 max-w-md">
-                    {service.description}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    <Switch
-                      className="bg-light-purple"
-                      checked={service.status}
-                      onChange={() =>
-                        toggleServiceStatus(service._id, service.status)
-                      }
-                    />
-                  </td>
-                  <td className="text-center border border-gray-300">
-                    <Button
-                      icon={<EditOutlined />}
-                      size={size}
-                      onClick={() =>
-                        editServiceHandler(
-                          service._id,
-                          service.image,
-                          service.title,
-                          service.description,
-                          service.link
-                        )
-                      }
-                    />
-                    <Button
-                      icon={<DeleteOutlined />}
-                      size={size}
-                      onClick={() => showDeleteConfirm(service._id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="overflow-x-auto mt-5">
+        <Table
+          dataSource={filteredData}
+          columns={columns}
+          bordered
+          pagination={{ position: ["bottomCenter"], pageSize: 5 }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={
+                  <span className="text-lg text-gray-500">
+                    No services available.
+                  </span>
+                }
+              />
+            ),
+          }}
+        />
       </div>
       <ServiceForm
         visible={isModalVisible}
-        onCreate={editData ? editExistingServiceHandler : insertServiceHandler}
+        onCreate={editData ? editServiceHandler : insertServiceHandler}
         onCancel={handleCancel}
         editData={editData}
       />

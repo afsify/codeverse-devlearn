@@ -158,7 +158,7 @@ function AdminLayout({ children }) {
           </ul>
         </div>
       </aside>
-      <main className="w-full p-2 overflow-y-auto h-screen">{children}</main>
+      <main className="w-full p-2 overflow-y-auto h-screen mb-20 md:mb-0">{children}</main>
       {nav && (
         <div className="flex top-0 bottom-0 left-0 w-full p-3 fixed z-40">
           <div className="fixed right-8 top-8">

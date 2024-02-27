@@ -50,7 +50,7 @@ const insertProject = async (req, res, next) => {
     res.status(200).json({
       message: "Project Created",
       success: true,
-      savedProject,
+      data: savedProject,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
@@ -90,7 +90,7 @@ const editProject = async (req, res, next) => {
     const savedProject = await project.save();
     res
       .status(200)
-      .json({ success: true, message: "Project Updated", savedProject });
+      .json({ success: true, message: "Project Updated", data: savedProject });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
     next(error);
@@ -109,8 +109,10 @@ const projectStatus = async (req, res, next) => {
         .json({ success: false, message: "Project not Found" });
     }
     project.status = !project.status;
-    await project.save();
-    res.status(200).json({ success: true, message: "Status Updated" });
+    const savedBanner = await project.save();
+    res
+      .status(200)
+      .json({ success: true, message: "Status Updated", data: savedBanner });
   } catch (error) {
     next(error);
     res.status(500).json({ success: false, message: "Error Occurred" });

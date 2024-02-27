@@ -40,14 +40,7 @@ function BannerManage() {
     insertItem(formData);
   };
 
-  const showEditWindow = (bannerId, image, title, description, link) => {
-    const bannerToEdit = {
-      _id: bannerId,
-      image: image,
-      title: title,
-      link: link,
-      description: description,
-    };
+  const showEditWindow = (bannerToEdit) => {
     setEditData(bannerToEdit);
     showModal();
   };
@@ -164,15 +157,7 @@ function BannerManage() {
             className="text-white"
             icon={<EditOutlined />}
             size={size}
-            onClick={() =>
-              showEditWindow(
-                record._id,
-                record.image,
-                record.title,
-                record.description,
-                record.link
-              )
-            }
+            onClick={() => showEditWindow(record)}
           />
           <Button
             className="text-white"
@@ -199,7 +184,7 @@ function BannerManage() {
           dataSource={filteredData}
           columns={columns}
           bordered
-          pagination={{ position: ["bottomCenter"], pageSize: 4 }}
+          pagination={{ position: ["bottomCenter"], pageSize: 5 }}
           locale={{
             emptyText: (
               <Empty

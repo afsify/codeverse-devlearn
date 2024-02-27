@@ -1,16 +1,20 @@
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useEdit from "../../hooks/useEdit";
+import useFetch from "../../hooks/useFetch";
+import useInsert from "../../hooks/useInsert";
+import useToggle from "../../hooks/useToggle";
+import useDelete from "../../hooks/useDelete";
 import Title from "../../components/admin/Title";
-import { Empty, Button, Modal, Switch } from "antd";
+import { Button, Empty, Switch, Table, Input } from "antd";
 import ProjectForm from "../../components/admin/ProjectForm";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
+import DeleteConfirm from "../../components/admin/DeleteConfirm";
 import {
   EditOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
-  ExclamationCircleOutlined,
+  SearchOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import {
   listProject,
@@ -21,130 +25,45 @@ import {
 } from "../../api/services/adminService";
 
 function ProjectManage() {
-  const dispatch = useDispatch();
   const [size] = useState("large");
-  const [projects, setProjects] = useState([]);
   const [editData, setEditData] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        dispatch(showLoading());
-        const response = await listProject();
-        dispatch(hideLoading());
-        const projectData = response.data.data;
-        setProjects(projectData);
-      } catch (error) {
-        dispatch(hideLoading());
-        console.error("Error fetching projects:", error);
-        setProjects([]);
-      }
-    };
-    fetchProjects();
-  }, [dispatch]);
+  const { data: project, setData: setProject } = useFetch(listProject);
+  const { editItem } = useEdit(editProject, setProject, setIsModalVisible);
+  const { toggleStatus } = useToggle(projectStatus, setProject);
+  const { deleteItem } = useDelete(deleteProject, setProject);
+  const { insertItem } = useInsert(
+    insertProject,
+    setProject,
+    setIsModalVisible
+  );
 
   const insertProjectHandler = async (formData) => {
-    try {
-      dispatch(showLoading());
-      const response = await insertProject(formData);
-      dispatch(hideLoading());
-      if (response.data.success) {
-        const newProject = response.data.savedProject;
-        setProjects([...projects, newProject]);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+    insertItem(formData);
   };
 
-  const editProjectHandler = (
-    projectId,
-    image,
-    title,
-    description,
-    category,
-    github,
-    youtube,
-    live
-  ) => {
-    const projectToEdit = {
-      _id: projectId,
-      image: image,
-      title: title,
-      description: description,
-      category: category,
-      github: github,
-      youtube: youtube,
-      live: live,
-    };
+  const showEditWindow = (projectToEdit) => {
     setEditData(projectToEdit);
     showModal();
   };
 
-  const editExistingProjectHandler = async (formData) => {
-    try {
-      const response = await editProject(editData._id, formData);
-      if (response.data.success) {
-        const updatedProject = response.data.savedProject;
-        const updatedProjects = projects.map((project) =>
-          project._id === updatedProject._id ? updatedProject : project
-        );
-        setProjects(updatedProjects);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+  const editProjectHandler = async (formData) => {
+    editItem(editData._id, formData);
   };
 
   const toggleProjectStatus = async (projectId, currentStatus) => {
-    try {
-      const newStatus = !currentStatus;
-      const response = await projectStatus(projectId, newStatus);
-      if (response.data.success) {
-        const updatedProjectsResponse = await listProject();
-        const updatedProjectsData = updatedProjectsResponse.data;
-        setProjects(updatedProjectsData);
-        toast.success(response.data.message);
-        const updatedProjects = projects.map((project) =>
-          project._id === projectId
-            ? { ...project, status: newStatus }
-            : project
-        );
-        setProjects(updatedProjects);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
+    toggleStatus(projectId, currentStatus);
   };
 
   const deleteProjectHandler = async (projectId) => {
-    try {
-      const response = await deleteProject(projectId);
-      if (response.data.success) {
-        const updatedProjects = projects.filter(
-          (project) => project._id !== projectId
-        );
-        setProjects(updatedProjects);
-        toast.success(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    deleteItem(projectId);
   };
+
+  const filteredData = project.filter((record) =>
+    record.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -155,23 +74,112 @@ function ProjectManage() {
     setEditData(null);
   };
 
-  const { confirm } = Modal;
-
   const showDeleteConfirm = (projectId) => {
-    confirm({
-      title: "Are you sure you want to delete this project?",
-      icon: <ExclamationCircleOutlined />,
-      content: "This action cannot be undone.",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      centered: true,
-      onOk() {
-        deleteProjectHandler(projectId);
-      },
-      onCancel() {},
-    });
+    const handleDelete = (projectId) => {
+      deleteProjectHandler(projectId);
+    };
+    DeleteConfirm(handleDelete, projectId);
   };
+
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      width: "20%",
+      align: "center",
+      render: (text, record) => (
+        <img src={record.image} alt={record.title} className="rounded-lg" />
+      ),
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      align: "center",
+      filterDropdown: () => (
+        <Input
+          size="large"
+          placeholder="Search Title"
+          value={searchInput}
+          className="rounded-md w-44"
+          onChange={(e) => setSearchInput(e.target.value)}
+          prefix={
+            <SearchOutlined style={{ color: "#1890ff", marginRight: "5px" }} />
+          }
+          suffix={
+            searchInput && (
+              <CloseCircleOutlined
+                style={{ color: "#1890ff", cursor: "pointer" }}
+                onClick={() => setSearchInput("")}
+              />
+            )
+          }
+        />
+      ),
+      filterIcon: () => (
+        <SearchOutlined
+          style={{ color: searchInput ? "#1890ff" : undefined }}
+        />
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+      width: "30%",
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
+      align: "center",
+      width: "15%",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text, record) => (
+        <Switch
+          className="bg-light-purple"
+          checked={record.status}
+          onChange={() => toggleProjectStatus(record._id, record.status)}
+        />
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="md:space-x-1 space-y-1">
+          <Button
+            className="text-white"
+            icon={<EditOutlined />}
+            size={size}
+            onClick={() => showEditWindow(record)}
+          />
+          <Button
+            className="text-white"
+            icon={<DeleteOutlined />}
+            size={size}
+            onClick={() => showDeleteConfirm(record._id)}
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <AdminLayout>
@@ -182,106 +190,28 @@ function ProjectManage() {
           Add Project
         </Button>
       </Title>
-      <div className="overflow-x-auto rounded-xl mt-5">
-        <table className="w-full table-auto border-collapse border border-gray-300 shadow-md shadow-black">
-          <thead className="bg-dark-purple text-white">
-            <tr>
-              <th className="text-center border border-gray-300 py-2">#</th>
-              <th className="text-center border border-gray-300">Image</th>
-              <th className="text-center border border-gray-300 py-2">Title</th>
-              <th className="text-center border border-gray-300 py-2">
-                Description
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Category
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Status
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="text-center py-14">
-                  <div className="flex justify-center items-center h-full">
-                    <Empty
-                      description={
-                        <span className="text-lg text-gray-500">
-                          No projects available.
-                        </span>
-                      }
-                    />
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              projects.map((project, index) => (
-                <tr key={project._id} className="bg-gray-100 hover:bg-gray-200">
-                  <td className="text-center border border-gray-300 py-2 px-2">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-300 flex justify-center">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      width="200"
-                      className="rounded-lg"
-                    />
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    {project.title}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 max-w-md">
-                    {project.description}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 max-w-md">
-                    {project.category}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    <Switch
-                      className="bg-light-purple"
-                      checked={project.status}
-                      onChange={() =>
-                        toggleProjectStatus(project._id, project.status)
-                      }
-                    />
-                  </td>
-                  <td className="text-center border border-gray-300">
-                    <Button
-                      icon={<EditOutlined />}
-                      size={size}
-                      onClick={() =>
-                        editProjectHandler(
-                          project._id,
-                          project.image,
-                          project.title,
-                          project.description,
-                          project.category,
-                          project.github,
-                          project.youtube,
-                          project.live
-                        )
-                      }
-                    />
-                    <Button
-                      icon={<DeleteOutlined />}
-                      size={size}
-                      onClick={() => showDeleteConfirm(project._id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="overflow-x-auto mt-5">
+        <Table
+          dataSource={filteredData}
+          columns={columns}
+          bordered
+          pagination={{ position: ["bottomCenter"], pageSize: 5 }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={
+                  <span className="text-lg text-gray-500">
+                    No projects available.
+                  </span>
+                }
+              />
+            ),
+          }}
+        />
       </div>
       <ProjectForm
         visible={isModalVisible}
-        onCreate={editData ? editExistingProjectHandler : insertProjectHandler}
+        onCreate={editData ? editProjectHandler : insertProjectHandler}
         onCancel={handleCancel}
         editData={editData}
       />
