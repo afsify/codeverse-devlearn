@@ -1,120 +1,66 @@
-import PropTypes from "prop-types";
-import toast from "react-hot-toast";
-import { Button, Input } from "antd";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import useEdit from "../../hooks/useEdit";
+import useFetch from "../../hooks/useFetch";
+import useInsert from "../../hooks/useInsert";
+import useToggle from "../../hooks/useToggle";
+import useDelete from "../../hooks/useDelete";
 import Title from "../../components/admin/Title";
-import { useEffect, useRef, useState } from "react";
 import CourseForm from "../../components/admin/CourseForm";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { hideLoading, showLoading } from "../../utils/alertSlice";
+import DeleteConfirm from "../../components/admin/DeleteConfirm";
+import { Button, Empty, Switch, Table, Input, Collapse, Badge } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   SearchOutlined,
   PlusCircleOutlined,
-  PlayCircleOutlined,
   CloseCircleOutlined,
+  PlayCircleOutlined,
 } from "@ant-design/icons";
 import {
   listCourse,
   editCourse,
+  courseStatus,
   insertCourse,
   deleteCourse,
 } from "../../api/services/adminService";
 
 function CourseManage() {
-  const inputRef = useRef(null);
-  const dispatch = useDispatch();
   const [size] = useState("large");
-  const [courses, setCourses] = useState([]);
   const [editData, setEditData] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [filteredCourses, setFilteredCourses] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        dispatch(showLoading());
-        const response = await listCourse();
-        dispatch(hideLoading());
-        const courseData = response.data.data;
-        setCourses(courseData);
-        setFilteredCourses(courseData);
-      } catch (error) {
-        dispatch(hideLoading());
-        console.error("Error fetching courses:", error);
-        setCourses([]);
-        setFilteredCourses([]);
-      }
-    };
-    fetchCourses();
-    inputRef.current && inputRef.current.focus();
-  }, [dispatch]);
+  const { data: course, setData: setCourse } = useFetch(listCourse);
+  const { insertItem } = useInsert(insertCourse, setCourse, setIsModalVisible);
+  const { editItem } = useEdit(editCourse, setCourse, setIsModalVisible);
+  const { toggleStatus } = useToggle(courseStatus, setCourse);
+  const { deleteItem } = useDelete(deleteCourse, setCourse);
 
-  const editCourseHandler = (courseId, title, description) => {
-    const courseToEdit = {
-      _id: courseId,
-      title: title,
-      description: description,
-    };
+  const insertCourseHandler = async (formData) => {
+    insertItem(formData);
+  };
+
+  const showEditWindow = (courseToEdit) => {
     setEditData(courseToEdit);
     showModal();
   };
 
+  const editCourseHandler = async (formData) => {
+    editItem(editData._id, formData);
+  };
+
+  const toggleCourseStatus = async (courseId, currentStatus) => {
+    toggleStatus(courseId, currentStatus);
+  };
+
   const deleteCourseHandler = async (courseId) => {
-    try {
-      const response = await deleteCourse(courseId);
-      if (response.data.success) {
-        const updatedCourses = courses.filter(
-          (course) => course._id !== courseId
-        );
-        setCourses(updatedCourses);
-        setFilteredCourses(updatedCourses);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    deleteItem(courseId);
   };
 
-  const insertCourseHandler = async (formData) => {
-    try {
-      dispatch(showLoading());
-      const response = await insertCourse(formData);
-      dispatch(hideLoading());
-      if (response.data.success) {
-        const newCourse = response.data.savedCourse;
-        setCourses([...courses, newCourse]);
-        setFilteredCourses([...courses, newCourse]);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
-    }
-  };
-
-  const editExistingCourseHandler = async (values) => {
-    try {
-      const response = await editCourse(editData._id, values);
-      if (response.data.success) {
-        const updatedCoursesResponse = await listCourse();
-        const updatedCoursesData = updatedCoursesResponse.data;
-        setCourses(updatedCoursesData);
-        setFilteredCourses(updatedCoursesData);
-        setIsModalVisible(false);
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
-    }
-  };
+  const filteredData = course.filter((record) =>
+    record.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -122,47 +68,114 @@ function CourseManage() {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setEditData(null);
   };
 
-  const handleSearchInputChange = (e) => {
-    const input = e.target.value;
-    setSearchInput(input);
-    filterCourses(input);
+  const showDeleteConfirm = (courseId) => {
+    const handleDelete = (courseId) => {
+      deleteCourseHandler(courseId);
+    };
+    DeleteConfirm(handleDelete, courseId);
   };
 
-  const filterCourses = (input) => {
-    const filtered = courses.filter((course) =>
-      course.title.toLowerCase().includes(input.toLowerCase())
-    );
-    setFilteredCourses(filtered);
-  };
-
-  const clearSearchInput = () => {
-    setSearchInput("");
-    setFilteredCourses(courses);
-  };
-
-  return (
-    <AdminLayout>
-      <Title>
-        <h2 className="text-xl font-semibold">Courses</h2>
-        <div className="flex items-center">
-          <Button
-            className="text-white flex items-center ms-3"
-            onClick={showModal}
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Videos",
+      dataIndex: "videos",
+      key: "videos",
+      align: "center",
+      width: "20%",
+      render: (videos, record) => (
+        <div className="flex flex-col gap-2">
+          <a
+            href={record.preview}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
           >
-            <PlusCircleOutlined />
-            Add Course
-          </Button>
+            <div className="relative">
+              <img
+                src={record.image}
+                alt="Preview Thumbnail"
+                className="w-full h-32 object-cover rounded-t-lg transition duration-300 group-hover:opacity-75 relative"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition duration-300 group-hover:bg-opacity-75">
+                <PlayCircleOutlined className="text-white text-4xl opacity-40 group-hover:opacity-100 transition duration-300" />
+              </div>
+            </div>
+            <div className="absolute bottom-0 left-0 w-full p-2">
+              <p className="text-white text-xs font-semibold font-sans group-hover:underline">
+                Preview
+              </p>
+            </div>
+          </a>
+          <Collapse>
+            <Collapse.Panel
+              header={
+                <div>
+                  <span>Videos</span>
+                  <Badge
+                    size="small"
+                    color="blue"
+                    count={videos.length}
+                    className="ml-1"
+                  />
+                </div>
+              }
+            >
+              {videos.map((video, index) => (
+                <div
+                  key={index}
+                  className="my-2 overflow-hidden cursor-pointer rounded-md"
+                >
+                  <a
+                    href={video}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
+                  >
+                    <div className="relative">
+                      <img
+                        src={record.image}
+                        alt={`Video Thumbnail ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-t-lg transition duration-300 group-hover:opacity-75 relative"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition duration-300 group-hover:bg-opacity-75">
+                        <PlayCircleOutlined className="text-white text-4xl opacity-40 group-hover:opacity-100 transition duration-300" />
+                      </div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 w-full p-2">
+                      <p className="text-white text-xs font-semibold font-sans group-hover:underline">
+                        Video {index + 1}
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </Collapse.Panel>
+          </Collapse>
         </div>
-      </Title>
-      <div className="flex justify-center mt-3 mb-2">
+      ),
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      align: "center",
+      filterDropdown: () => (
         <Input
-          ref={inputRef}
-          placeholder="Search courses"
+          size="large"
+          placeholder="Search Title"
           value={searchInput}
-          onChange={handleSearchInputChange}
-          className="rounded-md py-2 w-96"
+          className="rounded-md w-44"
+          onChange={(e) => setSearchInput(e.target.value)}
           prefix={
             <SearchOutlined style={{ color: "#1890ff", marginRight: "5px" }} />
           }
@@ -170,139 +183,105 @@ function CourseManage() {
             searchInput && (
               <CloseCircleOutlined
                 style={{ color: "#1890ff", cursor: "pointer" }}
-                onClick={clearSearchInput}
+                onClick={() => setSearchInput("")}
               />
             )
           }
         />
-      </div>
-      <div className="overflow-x-auto rounded-xl">
-        <table className="w-full table-auto border-collapse border border-gray-300 shadow-md shadow-black">
-          <thead className="bg-dark-purple text-white">
-            <tr>
-              <th className="text-center border border-gray-300 py-2">#</th>
-              <th className="text-center border border-gray-300 py-2">Title</th>
-              <th className="text-center border border-gray-300 py-2 px-16">
-                Videos
-              </th>
-              <th className="text-center border border-gray-300 py-2">
-                Description
-              </th>
-              <th className="text-center border border-gray-300 py-2">Price</th>
-              <th className="text-center border border-gray-300 py-2 px-8">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCourses &&
-              filteredCourses.map((course, index) => (
-                <tr key={index} className="bg-gray-100 hover:bg-gray-200">
-                  <td className="text-center border border-gray-300 py-2 px-2">
-                    {index + 1}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    {course.title}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 w-48">
-                    <div className="flex flex-col gap-2">
-                      <a
-                        href={course.preview}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
-                      >
-                        <div className="relative">
-                          <img
-                            src={course.image}
-                            alt={`Video Thumbnail ${index + 1}`}
-                            className="w-full h-24 object-cover rounded-t-lg transition duration-300 group-hover:opacity-75 relative"
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition duration-300 group-hover:bg-opacity-75">
-                            <PlayCircleOutlined className="text-white text-4xl opacity-40 group-hover:opacity-100 transition duration-300" />
-                          </div>
-                        </div>
-                        <div className="absolute bottom-0 left-0 w-full p-2">
-                          <p className="text-white text-xs font-semibold font-sans group-hover:underline">
-                            Preview
-                          </p>
-                        </div>
-                      </a>
-                      {course.videos.map((video, index) => (
-                        <a
-                          href={video}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          key={index}
-                          className="relative group overflow-hidden cursor-pointer rounded-md hover:shadow-md transition duration-300"
-                        >
-                          <div className="relative">
-                            <img
-                              src={course.image}
-                              alt={`Video Thumbnail ${index + 1}`}
-                              className="w-full h-24 object-cover rounded-t-lg transition duration-300 group-hover:opacity-75 relative"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition duration-300 group-hover:bg-opacity-75">
-                              <PlayCircleOutlined className="text-white text-4xl opacity-40 group-hover:opacity-100 transition duration-300" />
-                            </div>
-                          </div>
-                          <div className="absolute bottom-0 left-0 w-full p-2">
-                            <p className="text-white text-xs font-semibold font-sans group-hover:underline">
-                              Video {index + 1}
-                            </p>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 max-w-md">
-                    {course.description}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2 font-sans">
-                    ₹{course.price}
-                  </td>
-                  <td className="text-center border border-gray-300 py-2">
-                    <Button
-                      className="me-3"
-                      type="primary"
-                      icon={<EditOutlined />}
-                      size={size}
-                      onClick={() =>
-                        editCourseHandler(
-                          course._id,
-                          course.title,
-                          course.description
-                        )
-                      }
-                    />
-                    <Button
-                      type="primary"
-                      icon={<DeleteOutlined />}
-                      size={size}
-                      onClick={() => deleteCourseHandler(course._id)}
-                    />
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
+      ),
+      filterIcon: () => (
+        <SearchOutlined
+          style={{ color: searchInput ? "#1890ff" : undefined }}
+        />
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      align: "center",
+      width: "30%",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      align: "center",
+      render: (text, record) => <>₹{record.price}</>,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (text, record) => (
+        <Switch
+          className="bg-light-purple"
+          checked={record.status}
+          onChange={() => toggleCourseStatus(record._id, record.status)}
+        />
+      ),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      render: (text, record) => (
+        <div className="md:space-x-1 space-y-1">
+          <Button
+            className="text-white"
+            icon={<EditOutlined />}
+            size={size}
+            onClick={() => showEditWindow(record)}
+          />
+          <Button
+            className="text-white"
+            icon={<DeleteOutlined />}
+            size={size}
+            onClick={() => showDeleteConfirm(record._id)}
+          />
+        </div>
+      ),
+    },
+  ];
 
+  return (
+    <AdminLayout>
+      <Title>
+        <h2 className="text-xl font-semibold">Courses</h2>
+        <Button className="text-white flex items-center" onClick={showModal}>
+          <PlusCircleOutlined />
+          Add Course
+        </Button>
+      </Title>
+      <div className="overflow-x-auto mt-5">
+        <Table
+          dataSource={filteredData}
+          columns={columns}
+          bordered
+          pagination={{ position: ["bottomCenter"], pageSize: 5 }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={
+                  <span className="text-lg text-gray-500">
+                    No courses available.
+                  </span>
+                }
+              />
+            ),
+          }}
+        />
+      </div>
       <CourseForm
         visible={isModalVisible}
-        onCreate={editData ? editExistingCourseHandler : insertCourseHandler}
+        onCreate={editData ? editCourseHandler : insertCourseHandler}
         onCancel={handleCancel}
         editData={editData}
       />
     </AdminLayout>
   );
 }
-
-CourseForm.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onCreate: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  editData: PropTypes.object,
-};
 
 export default CourseManage;
