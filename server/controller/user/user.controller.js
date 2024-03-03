@@ -306,7 +306,10 @@ const topCourse = async (req, res, next) => {
       { $limit: 4 },
     ]);
     const topCourseIds = coursePurchases.map((item) => item._id);
-    const topCourses = await courseModel.find({ _id: { $in: topCourseIds } });
+    const topCourses = await courseModel.find({
+      _id: { $in: topCourseIds },
+      status: true,
+    });
     res.status(200).send({
       message: "Top Courses Fetched Successfully",
       success: true,
@@ -354,7 +357,7 @@ const listService = async (req, res, next) => {
 
 const listCourse = async (req, res, next) => {
   try {
-    const courses = await courseModel.find();
+    const courses = await courseModel.find({ status: true });
     res.status(200).send({
       message: "Courses Fetched Successfully",
       success: true,

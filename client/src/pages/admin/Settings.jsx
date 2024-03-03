@@ -110,7 +110,7 @@ function Settings() {
       <Title>
         <h2 className="text-xl font-semibold">Settings</h2>
       </Title>
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm shadow-black mt-5 p-4">
+      <div className="overflow-x-auto rounded-lg shadow-sm shadow-black mt-5 p-4">
         <Form
           form={form}
           name="admin-form"
@@ -152,7 +152,7 @@ function Settings() {
                     accept="image/*"
                     showUploadList={false}
                   >
-                    <Button className="flex items-center justify-center text-base p-2 rounded-full absolute bottom-2 right-2">
+                    <Button className="flex items-center justify-center text-white text-base p-2 rounded-full absolute bottom-2 right-2">
                       <CameraOutlined />
                     </Button>
                   </Upload>
@@ -407,6 +407,7 @@ function Settings() {
                               </Form.Item>
                               <div className="flex justify-center mt-4">
                                 <Button
+                                  className="text-white"
                                   onClick={() => {
                                     remove(name);
                                   }}
@@ -419,7 +420,7 @@ function Settings() {
                         </div>
                       ))}
                       <Button
-                        className="flex items-center"
+                        className="flex items-center text-white"
                         onClick={() => {
                           add();
                         }}
@@ -478,10 +479,7 @@ function Settings() {
                                   name={[name, "proficiency"]}
                                   fieldKey={[fieldKey, "proficiency"]}
                                 >
-                                  <Select
-                                    size="large"
-                                    defaultValue={30}
-                                  >
+                                  <Select size="large" defaultValue={30}>
                                     {[...Array(20)].map((_, index) => (
                                       <Option
                                         key={index + 1}
@@ -506,7 +504,7 @@ function Settings() {
                           </div>
                         ))}
                         <Button
-                          className="flex items-center"
+                          className="flex items-center text-white"
                           onClick={() => {
                             add();
                           }}
@@ -523,7 +521,11 @@ function Settings() {
           </div>
           <div className="flex justify-center mb-10">
             <Form.Item>
-              <Button className=" font-semibold" size="large" htmlType="submit">
+              <Button
+                className="font-semibold text-white"
+                size="large"
+                htmlType="submit"
+              >
                 Update About
               </Button>
             </Form.Item>

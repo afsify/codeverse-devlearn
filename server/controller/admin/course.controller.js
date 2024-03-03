@@ -41,7 +41,7 @@ const insertCourse = async (req, res, next) => {
     res.status(200).json({
       message: "Course Created",
       success: true,
-      savedCourse: savedCourse,
+      data: savedCourse,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
@@ -72,7 +72,7 @@ const editCourse = async (req, res, next) => {
     const savedCourse = await course.save();
     res
       .status(200)
-      .json({ success: true, message: "Course Updated", savedCourse });
+      .json({ success: true, message: "Course Updated", data: savedCourse });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
     next(error);
@@ -91,8 +91,8 @@ const courseStatus = async (req, res, next) => {
         .json({ success: false, message: "Course not Found" });
     }
     course.status = !course.status;
-    await course.save();
-    res.status(200).json({ success: true, message: "Status Updated" });
+    const savedCourse = await course.save();
+    res.status(200).json({ success: true, message: "Status Updated", data: savedCourse });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error Occurred" });
     next(error);

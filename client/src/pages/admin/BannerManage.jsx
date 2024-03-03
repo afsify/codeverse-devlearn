@@ -183,8 +183,8 @@ function BannerManage() {
         <Table
           dataSource={filteredData}
           columns={columns}
-          bordered
           pagination={{ position: ["bottomCenter"], pageSize: 5 }}
+          bordered
           locale={{
             emptyText: (
               <Empty
